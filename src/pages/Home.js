@@ -2,6 +2,8 @@
 import React from 'react';
 import { Container, List, ListItem, ListItemText } from '@mui/material';
 import Navbar from '../components/Navbar';
+import MainHeader from '../components/MainHeader';
+import IMG_6469 from '../components/IMG_6469.jpeg';
 
 const Home = () => {
   // Dummy data for the list of recipes
@@ -13,8 +15,9 @@ const Home = () => {
 
       {/* Content Section */}
       <Container>
-        <h1>Home Page</h1>
-        <p>Welcome to the Home page!</p>
+        <MainHeader title="Home Page" imageUrl= {IMG_6469} />
+
+        <p>hello! hope you enjoy your stay</p>
 
         {/* List of Recipes */}
         <List>
