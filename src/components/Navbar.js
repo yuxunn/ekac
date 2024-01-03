@@ -1,6 +1,6 @@
 // src/components/Navbar.js
 import React from 'react';
-import IMG_6469 from './IMG_6469.jpeg'
+import IMG_6469 from './IMG_6469.jpeg';
 import { Link } from 'react-router-dom';
 import {
   AppBar,
@@ -17,7 +17,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Recipes', 'About']; // Added 'About' to the pages array
+const pages = ['Recipes', 'About', 'AddRecipe']; // Added 'About' to the pages array
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -43,24 +43,25 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-        <img
-  src={IMG_6469} // Make sure to provide the correct path or URL to your image
-  alt="Custom Icon"
-  style={{
-    display: { xs: 'none', md: 'flex' },
-    marginRight: 1,
-    width: '24px', // Set the desired width
-    height: '24px', // Set the desired height
-    borderRadius: '50%', // Apply border-radius for a circular shape
-    objectFit: 'cover', // Ensure the entire image is visible within the circular shape
-  }}
-/>          <Typography
+          <img
+            src={IMG_6469}
+            alt="Custom Icon"
+            style={{
+              display: { xs: 'none', md: 'flex' },
+              marginRight: 1,
+              width: '24px',
+              height: '24px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+            }}
+          />
+          <Typography
             variant="h6"
             noWrap
-            component={Link} // Added Link component for navigation
-            to="/" // Navigate to the home page
+            component={Link}
+            to="/"
             sx={{
-                ml: 1, // Add margin to the left
+              ml: 1,
               mr: 2,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
@@ -112,6 +113,11 @@ function ResponsiveAppBar() {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              ))}
             </Menu>
           </Box>
 
@@ -119,8 +125,8 @@ function ResponsiveAppBar() {
           <Typography
             variant="h5"
             noWrap
-            component={Link} // Added Link component for navigation
-            to="/" // Navigate to the home page
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },

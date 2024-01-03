@@ -15,9 +15,7 @@ const Home = () => {
 
       {/* Content Section */}
       <Container>
-        <MainHeader title="Home Page" imageUrl= {IMG_6469} />
-
-        <p>hello! hope you enjoy your stay</p>
+        <p>hello! This website serves as a recipe blog :D hope you enjoy your stay. </p>
 
         {/* List of Recipes */}
         <List>
