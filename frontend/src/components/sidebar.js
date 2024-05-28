@@ -17,7 +17,7 @@ const Sidebar = () => {
       <div className="flex flex-col items-center">
         <VscAccount className="w-24 h-16 rounded-full" alt="User Avatar" />
         <h2 className="mt-2 text-lg font-semibold">John Doe</h2>
-        <p className="text-gray-600">Chef de Partie</p>
+        <p className="text-gray-600">Occupation</p>
         <div className="mt-4 bg-red-100 text-red-600 py-2 px-4 rounded-full flex items-center">
           <span className="text-2xl">🍲</span> 
           <span className="ml-2">37</span>
@@ -46,3 +46,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
