@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../components/firebase'; // Ensure correct import of db and auth
-
+import Navbar from '../components/navbar';
 const AddRecipePage = () => {
   const [title, setTitle] = useState('');
   const [level, setLevel] = useState('');
@@ -58,6 +58,7 @@ const AddRecipePage = () => {
   };
 
   return (
+    
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300 p-6">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
         <h2 className="text-2xl font-bold mb-6 text-center">Add New Recipe</h2>
@@ -162,6 +163,7 @@ const AddRecipePage = () => {
           </button>
         </form>
       </div>
+
     </div>
   );
 };

@@ -1,37 +1,36 @@
 import React from 'react';
+import { PiBowlFoodBold } from 'react-icons/pi'; // Example import for a default icon
 
-const Card = ({ ImageComponent, title, level, time, calories, type, rating }) => {
+const Card = ({ title, level, time, calories, type, rating }) => {
+  const defaultIcon = <PiBowlFoodBold className="w-16 h-16" />; // Default icon component
+
+  const typeIcons = {
+    Meat: '🍖',
+    Fish: '🐟',
+    Vege: '🥗',
+    default: '🍲'
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4">
-      <div className="flex justify-center">
-        <ImageComponent className="w-16 h-16 rounded-full -mt-12 shadow-lg" />
+    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+      <div className="w-16 h-16 mb-4">
+        {defaultIcon}
       </div>
-      <div className="text-center mt-2">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        <p className={`text-sm text-${level.color}-500`}>{level.name}</p>
-      </div>
-      <div className="flex justify-around text-center mt-4">
-        <div>
-          <p className="text-lg font-bold">{time}</p>
-          <p className="text-sm text-gray-600">Min</p>
-        </div>
-        <div>
-          <p className="text-lg font-bold">{calories}</p>
-          <p className="text-sm text-gray-600">Kcal</p>
-        </div>
-        <div>
-          <p className="text-lg font-bold">{type.icon}</p>
-          <p className="text-sm text-gray-600">{type.name}</p>
-        </div>
+      <h2 className="text-xl font-bold text-center mb-2">{title}</h2>
+      <p className="text-gray-600 text-center">{level}</p>
+      <div className="flex justify-between my-2 w-full px-4">
+        <span>{time} Min</span>
+        <span>{calories} Kcal</span>
+        <span className="text-2xl">
+          {typeIcons[type] || typeIcons.default}
+        </span>
       </div>
       <div className="flex justify-center mt-4">
-        {Array.from({ length: 5 }, (_, i) => (
-          <span key={i} className={`text-${i < rating ? 'red' : 'gray'}-500`}>&#9733;</span>
+        {[...Array(5)].map((_, i) => (
+          <span key={i} className={i < rating ? 'text-red-500' : 'text-gray-400'}>★</span>
         ))}
       </div>
-      <div className="text-center mt-4">
-        <button className="bg-red-500 text-white px-4 py-2 rounded-full">Start cooking</button>
-      </div>
+      <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded-full">Start cooking</button>
     </div>
   );
 };
