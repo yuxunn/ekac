@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaHeart, FaBook, FaUsers, FaGlobe } from 'react-icons/fa';
+import { FaHeart, FaBook, FaUsers, FaGlobe, FaPlus } from 'react-icons/fa';
 import { VscAccount } from "react-icons/vsc";
 import strawberrycake from '../assets/strawberrycake.png';
 import { doc, getDoc } from 'firebase/firestore';
@@ -55,12 +55,16 @@ const Sidebar = () => {
         )}
       </div>
       <nav className="space-y-2">
-        <a href="/" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-900">
-          <FaBook className="text-red-500 mr-3" />
+        <a href="/addNewRecipe" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
+            <FaPlus className=" mr-3" />
+            <span>Add New Recipe</span>
+          </a>
+        <a href="/" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
+          <FaBook className=" mr-3" />
           <span>Recipes</span>
         </a>
         <a href="/favorites" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
-          <FaHeart className="mr-3" />
+          <FaHeart className=" mr-3" />
           <span>Favorites</span>
         </a>
         <a href="/courses" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
@@ -68,7 +72,7 @@ const Sidebar = () => {
           <span>Courses</span>
         </a>
         <a href="/community" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
-          <FaGlobe className="mr-3" />
+          <FaGlobe className=" mr-3" />
           <span>Community</span>
         </a>
       </nav>

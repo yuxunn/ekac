@@ -1,15 +1,14 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./pages/home";
-import Recipe from "./components/recipe"; // This will be the recipe detail component
-import MainLayout from './components/mainlayout'; // Import MainLayout
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Recipe from './components/recipe';
+import MainLayout from './components/mainlayout';
 import './tailwind.css';
 import Card from './components/card';
 import { PiBowlFoodBold } from "react-icons/pi";
 import Signup from"./pages/signup";
 import LogIn from "./pages/login";
 import ProtectedRoute from "./components/protectedRoute";
-
+import AddRecipePage from './pages/addRecipePage';
 const App = () => {
   const recipes = [
     {
@@ -47,10 +46,10 @@ const App = () => {
         <Route path="/login" element={<LogIn />} />
         <Route path="/recipe/:id" element={<Recipe />} />
         <Route path="/signup" element={<Signup />} />
-        <Route 
-          path="/home" 
+        <Route
+          path="/home"
           element={
-            <ProtectedRoute 
+            <ProtectedRoute
               element={
                 <MainLayout>
                   <main className="p-4 pt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -59,9 +58,19 @@ const App = () => {
                     ))}
                   </main>
                 </MainLayout>
-              } 
+              }
             />
-          } 
+          }
+        />
+        <Route
+          path="/addNewRecipe"
+          element={
+            <ProtectedRoute
+              element={
+                  <AddRecipePage />
+              }
+            />
+          }
         />
       </Routes>
     </Router>
@@ -69,3 +78,4 @@ const App = () => {
 };
 
 export default App;
+
