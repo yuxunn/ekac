@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
 import strawberrycake from '../assets/strawberrycake.png';
+import {Link} from 'react-router-dom'
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import {auth} from '../components/firebase';
 function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (username === '' || password === '') {
-      alert('Please fill in both fields');
-      return;
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   if (username === '' || password === '') {
+  //     alert('Please fill in both fields');
+  //     return;
+  //   }
+  //   console.log('Logging in with', username, password);
+  //   alert('Login successful!');
+  // };
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log("logged in successfully");
+        window.location.href = "/home";
+      } catch (error) {
+        console.log(error.message);
+      }
     }
-    console.log('Logging in with', username, password);
-    alert('Login successful!');
-  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300">
@@ -28,10 +42,10 @@ function Login() {
           <div className="mb-4">
             <input
               type="text"
-              id="username"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              placeholder="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full p-3 border rounded-lg"
             />
           </div>
@@ -51,8 +65,13 @@ function Login() {
           >
             Log In
           </button>
+
         </form>
+       
       </div>
+      <p className = "loginbottomtext">
+        Don't have an account? Sign up <Link to="/signup">here</Link>.<br/>
+        </p>
     </div>
   );
 }

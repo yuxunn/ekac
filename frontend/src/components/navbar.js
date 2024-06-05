@@ -1,6 +1,20 @@
 import React from 'react';
+import { signOut } from 'firebase/auth';
+import { auth } from '../components/firebase'; // Ensure correct import of auth
 
 const Navbar = () => {
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log('User logged out successfully');
+      window.location.href = "/login";
+
+    } catch (error) {
+      console.log('Error logging out: ', error.message);
+    }
+  };
+
   return (
     <div className="flex items-center justify-between p-4 bg-pink-100 shadow-md">
       <div className="flex items-center flex-grow">
@@ -13,8 +27,11 @@ const Navbar = () => {
           className="w-full p-2 bg-transparent border-b border-gray-300 placeholder-gray-500 focus:outline-none"
         />
       </div>
-      <button className="ml-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-        Go to Premium
+      <button
+        onClick={handleLogout}
+        className="ml-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+      >
+        Log Out
       </button>
     </div>
   );
