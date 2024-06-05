@@ -7,16 +7,6 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   if (username === '' || password === '') {
-  //     alert('Please fill in both fields');
-  //     return;
-  //   }
-  //   console.log('Logging in with', username, password);
-  //   alert('Login successful!');
-  // };
-
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
@@ -43,7 +33,7 @@ function Login() {
             <input
               type="text"
               id="email"
-              placeholder="email"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-3 border rounded-lg"
@@ -65,13 +55,12 @@ function Login() {
           >
             Log In
           </button>
-
+          <div className="mt-4 text-center text-gray-600">
+            Don't have an account? Sign up <Link to="/signup" className="text-blue-500">here</Link>.
+          </div>
         </form>
-       
       </div>
-      <p className = "loginbottomtext">
-        Don't have an account? Sign up <Link to="/signup">here</Link>.<br/>
-        </p>
+
     </div>
   );
 }

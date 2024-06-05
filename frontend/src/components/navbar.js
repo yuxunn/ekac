@@ -14,7 +14,7 @@ const Navbar = () => {
       console.log('Error logging out: ', error.message);
     }
   };
-
+  
   return (
     <div className="flex items-center justify-between p-4 bg-pink-100 shadow-md">
       <div className="flex items-center flex-grow">

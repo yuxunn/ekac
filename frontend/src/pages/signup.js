@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import strawberrycake from '../assets/strawberrycake.png';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../components/firebase'; // Ensure correct import of auth
+import { auth, db } from '../components/firebase'; 
 import { setDoc, doc } from 'firebase/firestore';
-
+import {Link} from 'react-router-dom';
 function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +33,7 @@ function Signup() {
 
       }
       console.log("User data saved to Firestore.");
-
+      window.location.href="/login"
     } catch (error) {
       console.log(error.message);
     }
@@ -41,7 +41,7 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300">
-      <div className="bg-white p-8 rounded-lg shadow-md flex w-2/3 max-w-lg">
+      <div className="bg-white p-8 rounded-lg shadow-md flex w-2/3 max-w-lg"> {/* Adjusted max width */}
         <div className="flex items-center justify-center w-1/3">
           <img 
             className="w-16 h-16 mr-10"
@@ -49,11 +49,11 @@ function Signup() {
             alt="Logo"
           />
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="w-2/3">
           <div className="mb-4">
             <input
               type="email"
-              id="Email"
+              id="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -63,7 +63,7 @@ function Signup() {
           <div className="mb-4">
             <input
               type="text"
-              id="Username"
+              id="username"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -92,10 +92,13 @@ function Signup() {
           </div>
           <button
             type="submit"
-            className="ml -10 w-full py-3 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded hover:from-blue-400 hover:to-pink-500"
+            className="w-full py-3 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded hover:from-blue-400 hover:to-pink-500"
           >
             Sign Up
           </button>
+          <div className="mt-4 text-center text-gray-600">
+            Already have an account? Log In <Link to="/login" className="text-blue-500">here</Link>.
+          </div>
         </form>
       </div>
     </div>

@@ -7,7 +7,8 @@ import './tailwind.css';
 import Card from './components/card';
 import { PiBowlFoodBold } from "react-icons/pi";
 import Signup from"./pages/signup";
-import LogIn from './pages/login';
+import LogIn from "./pages/login";
+import ProtectedRoute from "./components/protectedRoute";
 
 const App = () => {
   const recipes = [
@@ -45,17 +46,21 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<LogIn />} />
         <Route path="/recipe/:id" element={<Recipe />} />
-        <Route path="/signup" element={<Signup/>}/>
+        <Route path="/signup" element={<Signup />} />
         <Route 
           path="/home" 
           element={
-            <MainLayout>
-              <main className="p-4 pt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {recipes.map((recipe, index) => (
-                  <Card key={index} {...recipe} />
-                ))}
-              </main>
-            </MainLayout>
+            <ProtectedRoute 
+              element={
+                <MainLayout>
+                  <main className="p-4 pt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {recipes.map((recipe, index) => (
+                      <Card key={index} {...recipe} />
+                    ))}
+                  </main>
+                </MainLayout>
+              } 
+            />
           } 
         />
       </Routes>
