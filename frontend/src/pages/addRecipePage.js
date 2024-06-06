@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../components/firebase'; // Ensure correct import of db and auth
+import { auth, db } from '../components/firebase'; 
 import Navbar from '../components/navbar';
+
 const AddRecipePage = () => {
   const [title, setTitle] = useState('');
   const [level, setLevel] = useState('');

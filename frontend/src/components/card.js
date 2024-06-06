@@ -8,7 +8,11 @@ const Card = ({ title, level, time, calories, type, rating }) => {
     Meat: '🍖',
     Fish: '🐟',
     Vege: '🥗',
+    Matcha: '🍵',
+    Chocolate: '🍫',
+    Strawberry: '🍓',
     default: '🍲'
+    
   };
 
   return (

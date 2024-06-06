@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+// src/pages/Home.js
+import React, { useEffect, useState, useContext } from 'react';
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '../components/firebase'; 
 import Card from '../components/card';
+import { SearchContext } from '../components/searchContext';
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
+  const { searchTerm } = useContext(SearchContext);
 
   useEffect(() => {
     const fetchRecipes = () => {
@@ -29,9 +32,13 @@ const Home = () => {
     fetchRecipes();
   }, []);
 
+  const filteredRecipes = recipes.filter(recipe =>
+    recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <main className="p-4 pt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {recipes.map((recipe) => (
+      {filteredRecipes.map((recipe) => (
         <Card key={recipe.id} {...recipe} />
       ))}
     </main>
