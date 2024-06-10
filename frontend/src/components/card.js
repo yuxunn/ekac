@@ -4,11 +4,11 @@ import filledheart from '../assets/filledheart.png';
 import heart from '../assets/heart.png';
 import { db, auth } from '../components/firebase';
 import bin from '../assets/bin.png';
-import { doc, setDoc, deleteDoc, getDocs, collection } from 'firebase/firestore';
+import { doc, setDoc, deleteDoc, getDocs, collection, query, where } from 'firebase/firestore';
 
 const Card = ({ title, level, time, calories, type, rating }) => {
   const [isFavourite, setIsFavourite] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
+  const [docId, setDocId] = useState(null);
 
   const defaultIcon = <PiBowlFoodBold className="w-16 h-16" />;
 
@@ -23,50 +23,49 @@ const Card = ({ title, level, time, calories, type, rating }) => {
   };
 
   useEffect(() => {
-    const fetchFavourites = async () => {
+    const fetchDocId = async () => {
       try {
         const user = auth.currentUser;
         if (user) {
-          const favCollection = collection(db, 'users', user.uid, 'favourites');
-          const favSnapshot = await getDocs(favCollection);
-          const favList = favSnapshot.docs.map(doc => doc.id);
-
-          if (favList.includes(title)) {
-            setIsFavourite(true);
+          const q = query(collection(db, 'users', user.uid, 'recipes'), where("title", "==", title));
+          const querySnapshot = await getDocs(q);
+          if (!querySnapshot.empty) {
+            const document = querySnapshot.docs[0];
+            setDocId(document.id);
+            console.log('Fetched document ID:', document.id);
           }
         }
       } catch (error) {
-        console.error('Error fetching favourites:', error);
+        console.error('Error fetching document ID:', error);
       }
     };
 
-    fetchFavourites();
-  }, [title, isDeleted]);
+    fetchDocId();
+  }, [title]);
 
   const handleDeleteClick = async (event) => {
-    
-  }
+    event.preventDefault();
 
-  // const handleDeleteClick = async (event) => {
-  //   event.preventDefault();
-    
-  //   const user = auth.currentUser;
-  //   if (!user) {
-  //     console.error('No user is signed in');
-  //     return;
-  //   }
+    const user = auth.currentUser;
+    if (!user) {
+      console.error('No user is signed in');
+      return;
+    }
+    if (!docId) {
+      console.error('Document ID not found');
+      return;
+    }
 
-  //   const docRef = doc(db, 'users', user.uid, 'recipes', title);
-  //   console.log('Attempting to delete document at path:', docRef.path);
-    
-  //   try {
-  //     await deleteDoc(docRef);
-  //     console.log('Recipe removed successfully', docRef.path);
-  //     setIsDeleted(true); 
-  //   } catch (error) {
-  //     console.error('Error removing recipe:', error);
-  //   }
-  // };
+    const docRef = doc(db, 'users', user.uid, 'recipes', docId);
+    console.log('Attempting to delete document at path:', docRef.path);
+
+    try {
+      await deleteDoc(docRef);
+      console.log('Recipe removed successfully', docRef.path);
+    } catch (error) {
+      console.error('Error removing recipe:', error);
+    }
+  };
 
   const handleFavouriteClick = async (event) => {
     event.preventDefault();

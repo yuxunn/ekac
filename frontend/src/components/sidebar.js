@@ -70,7 +70,7 @@ const Sidebar = () => {
           {userDetails ? (
             <>
               <h2 className="mt-2 text-lg font-semibold">{userDetails.username}</h2>
-              <div className="mt-4 bg-red-100 text-red-600 py-2 px-4 rounded-full flex items-center">
+              <div className="mt-4 bg-pink-100 text-red-600 py-2 px-4 rounded-full flex items-center">
                 <span className="text-2xl">🍲</span>
                 <span className="ml-2">{recipeCount}</span>
               </div>
@@ -80,23 +80,23 @@ const Sidebar = () => {
           )}
         </div>
         <nav className="space-y-2">
-          <a href="/addNewRecipe" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
+          <a href="/addNewRecipe" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
             <FaPlus className=" mr-3" />
             <span>Add New Recipe</span>
           </a>
-          <a href="/" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
+          <a href="/" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
             <FaBook className=" mr-3" />
             <span>Recipes</span>
           </a>
-          <a href="/favorites" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
+          <a href="/favorites" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
             <FaHeart className=" mr-3" />
             <span>Favorites</span>
           </a>
-          <a href="/courses" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
+          <a href="/courses" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
             <FaUsers className="mr-3" />
             <span>Courses</span>
           </a>
-          <a href="/community" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 flex items-center text-gray-600">
+          <a href="/community" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
             <FaGlobe className=" mr-3" />
             <span>Community</span>
           </a>
