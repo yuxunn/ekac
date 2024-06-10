@@ -88,7 +88,7 @@ const Sidebar = () => {
             <FaBook className=" mr-3" />
             <span>Recipes</span>
           </a>
-          <a href="/favorites" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
+          <a href="/favourites" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
             <FaHeart className=" mr-3" />
             <span>Favorites</span>
           </a>
@@ -103,7 +103,6 @@ const Sidebar = () => {
         </nav>
       </div>
       <div className={`main-content transition-margin duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        {/* Main page content goes here */}
       </div>
     </div>
   );
