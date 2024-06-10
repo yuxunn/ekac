@@ -84,7 +84,7 @@ const Sidebar = () => {
             <FaPlus className=" mr-3" />
             <span>Add New Recipe</span>
           </a>
-          <a href="/" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
+          <a href="/recipes" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
             <FaBook className=" mr-3" />
             <span>Recipes</span>
           </a>

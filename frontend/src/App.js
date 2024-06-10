@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainLayout from './components/mainlayout';
-import './tailwind.css';
 import Signup from './pages/signup';
 import LogIn from './pages/login';
 import ProtectedRoute from './components/protectedRoute';
@@ -19,7 +18,6 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/recipe/:id" element={<Recipe />} />
           <Route path="/" element={<LogIn />} />
           <Route
             path="/home"
@@ -53,6 +51,18 @@ const App = () => {
               />
             }
           />
+          <Route
+          path="/recipes"
+          element={
+            <ProtectedRoute
+              element={
+                <MainLayout>
+                  <Home />
+                </MainLayout>
+              }
+            />
+          }
+        />
         </Routes>
       </Router>
     </SearchProvider>
