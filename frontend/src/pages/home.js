@@ -15,6 +15,7 @@ const Home = () => {
 
       if (user) {
         const q = query(collection(db, 'users', user.uid, 'recipes'));
+        console.log(q)
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const recipesData = [];
           querySnapshot.forEach((doc) => {

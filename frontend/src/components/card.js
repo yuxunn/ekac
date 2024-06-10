@@ -3,12 +3,14 @@ import { PiBowlFoodBold } from 'react-icons/pi';
 import filledheart from '../assets/filledheart.png';
 import heart from '../assets/heart.png';
 import { db, auth } from '../components/firebase';
+import bin from '../assets/bin.png';
 import { doc, setDoc, deleteDoc, getDocs, collection } from 'firebase/firestore';
 
 const Card = ({ title, level, time, calories, type, rating }) => {
-  const [isFavorite, setIsFavorite] = useState(false); 
+  const [isFavourite, setIsFavourite] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
-  const defaultIcon = <PiBowlFoodBold className="w-16 h-16" />; 
+  const defaultIcon = <PiBowlFoodBold className="w-16 h-16" />;
 
   const typeIcons = {
     Meat: '🍖',
@@ -21,25 +23,50 @@ const Card = ({ title, level, time, calories, type, rating }) => {
   };
 
   useEffect(() => {
-    const fetchFavorites = async () => {
+    const fetchFavourites = async () => {
       try {
         const user = auth.currentUser;
         if (user) {
-          const favCollection = collection(db, 'users', user.uid, 'favorites');
+          const favCollection = collection(db, 'users', user.uid, 'favourites');
           const favSnapshot = await getDocs(favCollection);
           const favList = favSnapshot.docs.map(doc => doc.id);
 
           if (favList.includes(title)) {
-            setIsFavorite(true);
+            setIsFavourite(true);
           }
         }
       } catch (error) {
-        console.error('Error fetching favorites:', error);
+        console.error('Error fetching favourites:', error);
       }
     };
 
-    fetchFavorites();
-  }, [title]);
+    fetchFavourites();
+  }, [title, isDeleted]);
+
+  const handleDeleteClick = async (event) => {
+    
+  }
+
+  // const handleDeleteClick = async (event) => {
+  //   event.preventDefault();
+    
+  //   const user = auth.currentUser;
+  //   if (!user) {
+  //     console.error('No user is signed in');
+  //     return;
+  //   }
+
+  //   const docRef = doc(db, 'users', user.uid, 'recipes', title);
+  //   console.log('Attempting to delete document at path:', docRef.path);
+    
+  //   try {
+  //     await deleteDoc(docRef);
+  //     console.log('Recipe removed successfully', docRef.path);
+  //     setIsDeleted(true); 
+  //   } catch (error) {
+  //     console.error('Error removing recipe:', error);
+  //   }
+  // };
 
   const handleFavouriteClick = async (event) => {
     event.preventDefault();
@@ -50,16 +77,15 @@ const Card = ({ title, level, time, calories, type, rating }) => {
       return;
     }
 
-    const favDoc = doc(db, 'users', user.uid, 'favorites', title);
+    const favDoc = doc(db, 'users', user.uid, 'favourites', title);
+    console.log('Attempting to modify favourite at path:', favDoc.path);
 
     try {
-      if (isFavorite) {
-        // Remove from favorites
+      if (isFavourite) {
         await deleteDoc(favDoc);
-        console.log('Favorite removed successfully');
+        console.log('Favorite removed successfully', favDoc.path);
       } else {
-        // Add to favorites
-        const favoriteData = {
+        const favouriteData = {
           title,
           level,
           time,
@@ -67,31 +93,39 @@ const Card = ({ title, level, time, calories, type, rating }) => {
           type,
           rating,
         };
-        await setDoc(favDoc, favoriteData);
-        console.log('Favorite saved successfully');
+        await setDoc(favDoc, favouriteData);
+        console.log('Favorite saved successfully', favDoc.path);
       }
-      setIsFavorite(!isFavorite);
+      setIsFavourite(!isFavourite);
     } catch (error) {
       console.error('Error updating favorite:', error);
     }
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
-      <div className="w-16 h-16 mb-4">
-        {defaultIcon}
-      </div>
-      <div className="flex justify-between w-full px-4">
-        <h2 className="text-xl font-bold text-center mb-2">{title}</h2>
+    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative">
+      <div className="absolute top-2 left-2 flex items-center">
+        <button className="toolbar-button mr-2" onClick={handleDeleteClick}>
+          <img 
+            alt="delete"
+            className="delete"
+            src={bin}
+            style={{ width: '24px', height: '24px' }} 
+          />
+        </button>
         <button className="toolbar-button" onClick={handleFavouriteClick}>
           <img 
             alt="favourite"
             className="favourite"
-            src={isFavorite ? filledheart : heart}
+            src={isFavourite ? filledheart : heart}
             style={{ width: '24px', height: '24px' }} 
           />
         </button>
       </div>
+      <div className="w-16 h-16 mb-4">
+        {defaultIcon}
+      </div>
+      <h2 className="text-xl font-bold text-center mb-2">{title}</h2>
       <p className="text-gray-600 text-center">{level}</p>
       <div className="flex justify-between my-2 w-full px-4">
         <span>{time} Min</span>

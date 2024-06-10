@@ -26,7 +26,7 @@ function Signup() {
       console.log(user);
       console.log("User registered successfully.");
       if (user) {
-        await setDoc(doc(db, "Users", user.uid), {
+        await setDoc(doc(db, "users", user.uid), {
           email: user.email,
           username: username, 
         });
