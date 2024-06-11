@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PiBowlFoodBold } from 'react-icons/pi'; 
 import filledheart from '../assets/filledheart.png';
 import heart from '../assets/heart.png';
 import { db, auth } from '../components/firebase';
+import pen from '../assets/pen.png';
 import bin from '../assets/bin.png';
 import { doc, setDoc, deleteDoc, getDocs, collection, query, where } from 'firebase/firestore';
 
 const Card = ({ title, level, time, calories, type, rating }) => {
   const [isFavourite, setIsFavourite] = useState(false);
   const [docId, setDocId] = useState(null);
+  const navigate = useNavigate();
 
   const defaultIcon = <PiBowlFoodBold className="w-16 h-16" />;
 
@@ -75,7 +78,7 @@ const Card = ({ title, level, time, calories, type, rating }) => {
       console.error('No user is signed in');
       return;
     }
-
+    
     const favDoc = doc(db, 'users', user.uid, 'favourites', title);
     console.log('Attempting to modify favourite at path:', favDoc.path);
 
@@ -101,6 +104,11 @@ const Card = ({ title, level, time, calories, type, rating }) => {
     }
   };
 
+  const handleEditClick = (event) => {
+    event.preventDefault();
+    navigate('/addNewRecipe', { state: { title, level, time, calories, type, rating, docId } });
+  }
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative">
       <div className="absolute top-2 left-2 flex items-center">
@@ -119,6 +127,14 @@ const Card = ({ title, level, time, calories, type, rating }) => {
             src={isFavourite ? filledheart : heart}
             style={{ width: '24px', height: '24px' }} 
           />
+        </button>
+        <button className="toolbar-button ml-2" onClick={handleEditClick}>
+          <img 
+            alt="edit"
+            className = "edit"
+            src= {pen}
+            style={{width:'24px', height:'24px'}}
+            />
         </button>
       </div>
       <div className="w-16 h-16 mb-4">
