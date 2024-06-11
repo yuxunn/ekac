@@ -39,6 +39,8 @@ const App = () => {
                 element={
                   <MainLayout>
                     <Favourites />
+                    <Chatbot/>
+
                   </MainLayout>
                 }
               />
@@ -59,6 +61,8 @@ const App = () => {
                 element={
                   <MainLayout>
                     <Community />
+                    <Chatbot/>
+
                   </MainLayout>
                 }
               />
