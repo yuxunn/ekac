@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../components/firebase'; 
 import Navbar from '../components/navbar';
 
@@ -12,7 +12,24 @@ const AddRecipePage = () => {
   const [type, setType] = useState('');
   const [rating, setRating] = useState('');
   const [description, setDescription] = useState('');
+  const [docId, setDocId] = useState(null);
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state) {
+      const { title, level, time, calories, type, rating, description, docId } = location.state;
+      setTitle(title);
+      setLevel(level);
+      setTime(time);
+      setCalories(calories);
+      setType(type);
+      setRating(rating);
+      setDescription(description || '');
+      setDocId(docId);
+    }
+  }, [location.state]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -20,9 +37,7 @@ const AddRecipePage = () => {
       const user = auth.currentUser;
 
       if (user) {
-        // Add recipe to user's collection
-        const userRecipeRef = doc(collection(db, 'users', user.uid, 'recipes'));
-        await setDoc(userRecipeRef, {
+        const recipeData = {
           title,
           level,
           time,
@@ -32,37 +47,32 @@ const AddRecipePage = () => {
           description,
           userId: user.uid,
           createdAt: new Date()
-        });
+        };
 
-        // Add recipe to global collection
-        const globalRecipeRef = doc(collection(db, 'recipes'));
-        await setDoc(globalRecipeRef, {
-          title,
-          level,
-          time,
-          calories,
-          type,
-          rating,
-          description,
-          userId: user.uid,
-          createdAt: new Date()
-        });
+        const userRecipeRef = docId 
+          ? doc(db, 'users', user.uid, 'recipes', docId) 
+          : doc(collection(db, 'users', user.uid, 'recipes'));
+        await setDoc(userRecipeRef, recipeData);
 
-        console.log('Recipe added successfully');
-        navigate('/home'); // Redirect to home after successful submission
+        const globalRecipeRef = docId 
+          ? doc(db, 'recipes', docId) 
+          : doc(collection(db, 'recipes'));
+        await setDoc(globalRecipeRef, recipeData);
+
+        console.log('Recipe added/updated successfully');
+        navigate('/home'); 
       } else {
         console.log('User is not authenticated');
       }
     } catch (error) {
-      console.log('Error adding recipe: ', error.message);
+      console.log('Error adding/updating recipe: ', error.message);
     }
   };
 
   return (
-    
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300 p-6">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
-        <h2 className="text-2xl font-bold mb-6 text-center">Add New Recipe</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">{docId ? 'Edit Recipe' : 'Add New Recipe'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
@@ -160,11 +170,10 @@ const AddRecipePage = () => {
             type="submit"
             className="w-full py-3 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded-lg hover:from-blue-400 hover:to-pink-500"
           >
-            Add Recipe
+            {docId ? 'Update Recipe' : 'Add Recipe'}
           </button>
         </form>
       </div>
-
     </div>
   );
 };
