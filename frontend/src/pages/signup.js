@@ -41,15 +41,15 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300">
-      <div className="bg-white p-8 rounded-lg shadow-md flex w-2/3 max-w-lg"> {/* Adjusted max width */}
-        <div className="flex items-center justify-center w-1/3">
+      <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-md mx-4">
+        <div className="flex items-center justify-center md:w-1/3">
           <img 
-            className="w-16 h-16 mr-10"
+            className="w-16 h-16 mb-4 "
             src={strawberrycake}
             alt="Logo"
           />
         </div>
-        <form onSubmit={handleSubmit} className="w-2/3">
+        <form onSubmit={handleSubmit} className="md: w-full">
           <div className="mb-4">
             <input
               type="email"
