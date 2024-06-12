@@ -9,6 +9,7 @@ import Home from './pages/home';
 import Favourites from './pages/favourites';
 import Community from './pages/community';
 import { SearchProvider } from './components/searchContext';
+import Chatbot from './components/chatbot';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
                 element={
                   <MainLayout>
                     <Home />
+                    <Chatbot/>
                   </MainLayout>
                 }
               />
@@ -37,6 +39,7 @@ const App = () => {
                 element={
                   <MainLayout>
                     <Favourites />
+                    <Chatbot/>
                   </MainLayout>
                 }
               />
@@ -57,6 +60,8 @@ const App = () => {
                 element={
                   <MainLayout>
                     <Community />
+                    <Chatbot/>
+
                   </MainLayout>
                 }
               />
@@ -69,6 +74,7 @@ const App = () => {
               element={
                 <MainLayout>
                   <Home />
+                  <Chatbot/>
                 </MainLayout>
               }
             />

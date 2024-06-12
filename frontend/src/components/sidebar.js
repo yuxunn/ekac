@@ -17,13 +17,6 @@ const Sidebar = () => {
 
       if (docSnap.exists()) {
         setUserDetails(docSnap.data());
-        
-        // const recipesRef = collection(db, "recipes");
-        // const q = query(recipesRef, where("userId", "==", user.uid));
-        // const querySnapshot = await getDocs(q);
-        // console.log(q)
-        // console.log(querySnapshot.size)
-        // setRecipeCount(querySnapshot.size);
         const q = query(collection(db, 'users', user.uid, 'recipes'));
         console.log(q);
         const querySnapshot = await getDocs(q);
@@ -40,12 +33,23 @@ const Sidebar = () => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       fetchUserData(user);
     });
-    return () => unsubscribe();
+
+    const handleResize = () => {
+      setIsSidebarOpen(window.innerWidth > 640);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
 
   return (
     <div className="relative">
