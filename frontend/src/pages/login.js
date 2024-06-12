@@ -46,7 +46,7 @@ function Login() {
               id="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.test.value)}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 border rounded-lg"
             />
           </div>
