@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { PiBowlFoodBold } from 'react-icons/pi'; 
+import { useNavigate } from 'react-router-dom';
+import { doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
+import { db, auth } from '../components/firebase';
 import filledheart from '../assets/filledheart.png';
 import heart from '../assets/heart.png';
-import { db, auth } from '../components/firebase';
-import {useNavigate} from 'react-router-dom';
 import bin from '../assets/bin.png';
 import pen from '../assets/pen.png';
-import { doc, setDoc, deleteDoc, getDocs, collection, query, where } from 'firebase/firestore';
 
-const CardFav = ({ title, level, time, calories, type, rating }) => {
-  const [isFavourite, setIsFavourite] = useState(true);
+import { PiBowlFoodBold } from 'react-icons/pi'; 
+
+const CardFav = ({ title, level, time, calories, type, rating, isFavourited }) => {
+  const [isFavourite, setIsFavourite] = useState(isFavourited);
   const [docId, setDocId] = useState(null);
   const navigate = useNavigate();
 
@@ -27,19 +28,12 @@ const CardFav = ({ title, level, time, calories, type, rating }) => {
 
   useEffect(() => {
     const fetchDocId = async () => {
-      try {
-        const user = auth.currentUser;
-        if (user) {
-          const q = query(collection(db, 'users', user.uid, 'recipes'), where("title", "==", title));
-          const querySnapshot = await getDocs(q);
-          if (!querySnapshot.empty) {
-            const document = querySnapshot.docs[0];
-            setDocId(document.id);
-            console.log('Fetched document ID:', document.id);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching document ID:', error);
+      const user = auth.currentUser;
+      if (user) {
+        const q = doc(db, 'users', user.uid, 'favourites', title);
+        const docSnap = await getDoc(q);
+        setDocId(docSnap.id);
+        setIsFavourite(docSnap.exists());
       }
     };
 
@@ -48,37 +42,26 @@ const CardFav = ({ title, level, time, calories, type, rating }) => {
 
   const handleDeleteClick = async (event) => {
     event.preventDefault();
-
     const user = auth.currentUser;
-    if (!user) {
-      console.error('No user is signed in');
+    if (!user || !docId) {
+      console.error('No user is signed in or document ID not found');
       return;
     }
-    if (!docId) {
-      console.error('Document ID not found');
-      return;
-    }
-
-    const docRef = doc(db, 'users', user.uid, 'recipes', docId);
-    console.log('Attempting to delete document at path:', docRef.path);
 
     try {
-      await deleteDoc(docRef);
-      console.log('Recipe removed successfully', docRef.path);
+      await deleteDoc(doc(db, 'users', user.uid, 'recipes', docId));
+      console.log('Recipe removed successfully');
     } catch (error) {
       console.error('Error removing recipe:', error);
     }
   };
 
-
-  const handleEditClick = (event) => {
-    event.preventDefault();
-    navigate('/addNewRecipe', { state: { title, level, time, calories, type, rating, docId } });
+  const handleEditClick = () => {
+    navigate('/editRecipe', { state: { title, level, time, calories, type, rating, docId } });
   };
 
   const handleFavouriteClick = async (event) => {
     event.preventDefault();
-
     const user = auth.currentUser;
     if (!user) {
       console.error('No user is signed in');
@@ -86,12 +69,10 @@ const CardFav = ({ title, level, time, calories, type, rating }) => {
     }
 
     const favDoc = doc(db, 'users', user.uid, 'favourites', title);
-    console.log('Attempting to modify favourite at path:', favDoc.path);
-
     try {
       if (isFavourite) {
         await deleteDoc(favDoc);
-        console.log('Favorite removed successfully', favDoc.path);
+        console.log('Favorite removed successfully');
       } else {
         const favouriteData = {
           title,
@@ -102,7 +83,7 @@ const CardFav = ({ title, level, time, calories, type, rating }) => {
           rating,
         };
         await setDoc(favDoc, favouriteData);
-        console.log('Favorite saved successfully', favDoc.path);
+        console.log('Favorite saved successfully');
       }
       setIsFavourite(!isFavourite);
     } catch (error) {

@@ -4,6 +4,7 @@ import { collection, query, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '../components/firebase'; 
 import Card from '../components/card';
 import { SearchContext } from '../components/searchContext';
+import CardFav from '../components/cardfav';
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
@@ -40,8 +41,8 @@ const Home = () => {
   return (
     <main className="p-4 pt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {filteredRecipes.map((recipe) => (
-        <Card key={recipe.id} {...recipe} />
-      ))}
+        <CardFav key={recipe.id} isFavorited={true} {...recipe} />
+        ))}
     </main>
   );
 };
