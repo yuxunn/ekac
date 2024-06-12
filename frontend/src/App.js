@@ -40,7 +40,6 @@ const App = () => {
                   <MainLayout>
                     <Favourites />
                     <Chatbot/>
-
                   </MainLayout>
                 }
               />
@@ -75,6 +74,7 @@ const App = () => {
               element={
                 <MainLayout>
                   <Home />
+                  <Chatbot/>
                 </MainLayout>
               }
             />
