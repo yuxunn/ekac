@@ -22,8 +22,9 @@ function Signup() {
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
         username: user.displayName,
+        avatar: finn
       });
-      window.location.href = "/login";
+      window.location.href = "/home";
     } catch (error) {
       console.error("Error signing in with Google:", error.message);
       alert("Failed to sign in with Google. Please try again.");
