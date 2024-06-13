@@ -1,22 +1,41 @@
-import React, { useState } from 'react';
-import strawberrycake from '../assets/strawberrycake.png';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../components/firebase'; 
-import { setDoc, doc } from 'firebase/firestore';
-import {Link} from 'react-router-dom';
+import React, { useState } from "react";
+import strawberrycake from "../assets/strawberrycake.png";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, db, provider } from "../components/firebase";
+import { setDoc, doc } from "firebase/firestore";
+import { Link } from "react-router-dom";
+import googleLogo from "../assets/google.png";
 function Signup() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [secondPassword, setSecondPassword] = useState('');
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [secondPassword, setSecondPassword] = useState("");
+  const [username, setUsername] = useState("");
+
+  const handleClick = async (event) => {
+    event.preventDefault();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Google sign-in successful. User:", user);
+
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        username: user.displayName,
+      });
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Error signing in with Google:", error.message);
+      alert("Failed to sign in with Google. Please try again.");
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (email === '' || password === '' || username === '') {
-      alert('Please fill in all fields');
+    if (email === "" || password === "" || username === "") {
+      alert("Please fill in all fields");
       return;
     } else if (password !== secondPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
 
@@ -28,12 +47,11 @@ function Signup() {
       if (user) {
         await setDoc(doc(db, "users", user.uid), {
           email: user.email,
-          username: username, 
+          username: username,
         });
-
       }
       console.log("User data saved to Firestore.");
-      window.location.href="/login"
+      window.location.href = "/login";
     } catch (error) {
       console.log(error.message);
     }
@@ -41,13 +59,27 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300">
-      <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-md mx-4">
-        <div className="flex items-center justify-center md:w-1/3">
-          <img 
-            className="w-16 h-16 mb-4 "
-            src={strawberrycake}
-            alt="Logo"
-          />
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "16px",
+          borderRadius: "10px",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          width: "90%",
+          maxWidth: "500px",
+          margin: "auto",
+        }}
+        className="flex flex-col w-full mx-4"
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <img className="w-16 h-16 mb-4" src={strawberrycake} alt="Logo" />
         </div>
         <form onSubmit={handleSubmit} className="md: w-full">
           <div className="mb-4">
@@ -81,7 +113,7 @@ function Signup() {
             />
           </div>
           <div className="mb-4">
-            <input 
+            <input
               type="password"
               id="secondPassword"
               placeholder="Re-enter password"
@@ -96,8 +128,24 @@ function Signup() {
           >
             Sign Up
           </button>
+          <button
+            onClick={handleClick}
+            className=" mt-3 w-full flex justify-center items-center bg-white hover:bg-gray-100 text-gray-800 font-normal py-2 px-4 rounded shadow"
+          >
+            <img
+              src={googleLogo}
+              alt="Google sign-in"
+              className="mr-2 w-10 h-10 object-fit:contain"
+            />
+            Sign up with Google
+          </button>
+
           <div className="mt-4 text-center text-gray-600">
-            Already have an account? Log In <Link to="/login" className="text-blue-500">here</Link>.
+            Already have an account? Log In{" "}
+            <Link to="/login" className="text-blue-500">
+              here
+            </Link>
+            .
           </div>
         </form>
       </div>

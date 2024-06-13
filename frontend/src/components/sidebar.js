@@ -77,7 +77,7 @@ const Sidebar = () => {
         <div className="flex flex-col items-center">
           <VscAccount className="w-24 h-16 rounded-full" alt="User Avatar" />
           {userDetails ? (
-            <>
+            <>  
               <h2 className="mt-2 text-lg font-semibold">{userDetails.username}</h2>
               <div className="mt-4 bg-pink-100 text-red-600 py-2 px-4 rounded-full flex items-center">
                 <span className="text-2xl">🍲</span>

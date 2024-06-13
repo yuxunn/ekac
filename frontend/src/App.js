@@ -10,6 +10,7 @@ import Favourites from './pages/favourites';
 import Community from './pages/community';
 import { SearchProvider } from './components/searchContext';
 import Chatbot from './components/chatbot';
+import Profile from './pages/profile';
 
 const App = () => {
   return (
@@ -28,6 +29,16 @@ const App = () => {
                     <Home />
                     <Chatbot/>
                   </MainLayout>
+                }
+              />
+            }
+          />
+                    <Route
+            path="/profile"
+            element={
+              <ProtectedRoute
+                element={
+                    <Profile />
                 }
               />
             }
