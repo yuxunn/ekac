@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FaHeart, FaBook, FaUsers, FaGlobe, FaPlus, FaBars, FaAngleDoubleRight , FaAngleDoubleLeft} from 'react-icons/fa';
-import { VscAccount } from "react-icons/vsc";
+import { FaHeart, FaBook, FaUsers, FaGlobe, FaPlus, FaBars, FaAngleDoubleRight , FaAngleDoubleLeft, FaUserCircle} from 'react-icons/fa';
 import strawberrycake from '../assets/strawberrycake.png';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '../components/firebase';
 import {Link} from 'react-router-dom';
-import cat from '../assets/cat.png';
 const Sidebar = () => {
   const [userDetails, setUserDetails] = useState(null);
   const [recipeCount, setRecipeCount] = useState(0);
@@ -118,6 +116,10 @@ const Sidebar = () => {
           <a href="/community" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
             <FaGlobe className=" mr-3" />
             <span>Community</span>
+          </a>
+          <a href="/profile" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-pink-100 flex items-center text-gray-600">
+            <FaUserCircle className= "mr-3" />
+            <span>View Profile</span>
           </a>
         </nav>
       </div>
