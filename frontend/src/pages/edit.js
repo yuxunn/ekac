@@ -1,48 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../components/firebase'; 
-import Navbar from '../components/navbar';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { auth, db } from "../components/firebase";
+import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 
-const AddRecipePage = () => {
-  const [title, setTitle] = useState('');
-  const [level, setLevel] = useState('');
-  const [time, setTime] = useState('');
-  const [calories, setCalories] = useState('');
-  const [type, setType] = useState('');
-  const [rating, setRating] = useState('');
-  const [description, setDescription] = useState('');
-  const [docId, setDocId] = useState('');
-  const [recId, setRecId] = useState('');
+const EditPage = () => {
+  const [title, setTitle] = useState("");
+  const [level, setLevel] = useState("");
+  const [time, setTime] = useState("");
+  const [calories, setCalories] = useState("");
+  const [type, setType] = useState("");
+  const [rating, setRating] = useState("");
+  const [description, setDescription] = useState("");
+  const [recId, setRecId] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (location.state) {
-      const { title, level, time, calories, type, rating, description, docId, recId } = location.state;
+        
+    const { title, level, time, calories, type, rating, description, recId } =
+    location.state;
+
       setTitle(title);
       setLevel(level);
       setTime(time);
+      console.log(recId);
+      setRecId(recId);
+      console.log(recId)
       setCalories(calories);
       setType(type);
       setRating(rating);
-      setDescription(description || '');
-      setDocId(docId);
-      setRecId(recId);
+      setDescription(description || "");
     }
   }, [location.state]);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const user = auth.currentUser;
+      const userRecipeRef = doc(db, "users", user.uid, "recipes", recId);
+        console.log(userRecipeRef)
       if (user) {
-        const isNewRecipe = !docId;
-        const userRecipeRef = isNewRecipe
-          ? doc(collection(db, 'users', user.uid, 'recipes'))
-          : doc(db, 'users', user.uid, 'recipes', recId);
-  
         const recipeData = {
           title,
           level,
@@ -53,39 +51,28 @@ const AddRecipePage = () => {
           description,
           userId: user.uid,
           createdAt: new Date(),
-          recId: userRecipeRef.id
+          recId,
         };
+        console.log(recipeData);
+        await updateDoc(userRecipeRef, recipeData);
+        navigate('/home')
 
-        await setDoc(userRecipeRef, recipeData);
-        const newRecId = userRecipeRef.id;  
-        setRecId(newRecId); 
-        console.log("Document ID after setDoc:", newRecId);
-        console.log(recId)
-  
-        const globalRecipeRef = isNewRecipe
-          ? doc(collection(db, 'recipes'))
-          : doc(db, 'recipes', newRecId);  
-  
-        await setDoc(globalRecipeRef, recipeData);
-  
-        console.log('Recipe added/updated successfully in both collections');
-        navigate('/home', { state: { recId: newRecId } }); 
-      } else {
-        console.log('User is not authenticated');
       }
     } catch (error) {
-      console.log('Error adding/updating recipe: ', error.message);
+      console.log("error updating recipe", error.message);
     }
   };
-  
-  
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300 p-6">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
-        <h2 className="text-2xl font-bold mb-6 text-center">{docId ? 'Edit Recipe' : 'Add New Recipe'}</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Edit Recipe</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="title"
+            >
               Recipe Title
             </label>
             <input
@@ -98,7 +85,10 @@ const AddRecipePage = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="level">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="level"
+            >
               Level
             </label>
             <input
@@ -112,7 +102,10 @@ const AddRecipePage = () => {
           </div>
           <div className="mb-6 grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="time"
+              >
                 Time (in minutes)
               </label>
               <input
@@ -125,7 +118,10 @@ const AddRecipePage = () => {
               />
             </div>
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="calories">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="calories"
+              >
                 Calories
               </label>
               <input
@@ -139,7 +135,10 @@ const AddRecipePage = () => {
             </div>
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="type"
+            >
               Type
             </label>
             <input
@@ -152,7 +151,10 @@ const AddRecipePage = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="rating">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="rating"
+            >
               Rating (1-5)
             </label>
             <input
@@ -165,7 +167,10 @@ const AddRecipePage = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="description"
+            >
               Description
             </label>
             <textarea
@@ -180,7 +185,7 @@ const AddRecipePage = () => {
             type="submit"
             className="w-full py-3 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded-lg hover:from-blue-400 hover:to-pink-500"
           >
-            {docId ? 'Update Recipe' : 'Add Recipe'}
+            Update Recipe
           </button>
         </form>
       </div>
@@ -188,4 +193,4 @@ const AddRecipePage = () => {
   );
 };
 
-export default AddRecipePage;
+export default EditPage;

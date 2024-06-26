@@ -11,6 +11,7 @@ import Community from './pages/community';
 import { SearchProvider } from './components/searchContext';
 import Chatbot from './components/chatbot';
 import Profile from './pages/profile';
+import EditPage from './pages/edit';
 
 const App = () => {
   return (
@@ -33,7 +34,16 @@ const App = () => {
               />
             }
           />
-                    <Route
+          <Route
+            path="/editRecipe"
+            element={
+              <ProtectedRoute
+                element={<EditPage />}
+              />
+            }
+          />
+          
+          <Route
             path="/profile"
             element={
               <ProtectedRoute

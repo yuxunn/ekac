@@ -9,7 +9,7 @@ import pen from '../assets/pen.png';
 
 import { PiBowlFoodBold } from 'react-icons/pi'; 
 
-const CardFav = ({ title, level, time, calories, type, rating, isFavourited }) => {
+const CardFav = ({ title, level, time, calories, type, rating, isFavourited, recId }) => {
   const [isFavourite, setIsFavourite] = useState(isFavourited);
   const [docId, setDocId] = useState(null);
   const navigate = useNavigate();
@@ -61,7 +61,8 @@ const CardFav = ({ title, level, time, calories, type, rating, isFavourited }) =
   };
 
   const handleEditClick = () => {
-    navigate('/editRecipe', { state: { title, level, time, calories, type, rating, docId } });
+    console.log(recId)
+    navigate('/editRecipe', { state: { title, level, time, calories, type, rating, recId } });
   };
 
   const handleFavouriteClick = async (event) => {
