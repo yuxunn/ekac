@@ -53,6 +53,7 @@ const Profile = () => {
           ...prevState,
           avatar: selectedAvatar,
         }));
+        console.log("Successfully updated Avatar")
       } catch (error) {
         console.error("Error updating avatar: ", error);
       }

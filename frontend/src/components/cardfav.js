@@ -47,13 +47,13 @@ const CardFav = ({ title, level, time, calories, type, rating, isFavourited, rec
   const handleDeleteClick = async (event) => {
     event.preventDefault();
     const user = auth.currentUser;
-    if (!user || !docId) {
+    if (!user || !recId) {
       console.error('No user is signed in or document ID not found');
       return;
     }
 
     try {
-      await deleteDoc(doc(db, 'users', user.uid, 'recipes', docId));
+      await deleteDoc(doc(db, 'users', user.uid, 'recipes', recId));
       console.log('Recipe removed successfully');
     } catch (error) {
       console.error('Error removing recipe:', error);
