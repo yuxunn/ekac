@@ -5,6 +5,7 @@ import { auth, db, provider } from "../components/firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import googleLogo from "../assets/google.png";
+import finn from "../assets/finn-the-human-duotone-svgrepo-com.svg"
 function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,8 +22,9 @@ function Signup() {
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
         username: user.displayName,
+        avatar: finn
       });
-      window.location.href = "/login";
+      window.location.href = "/home";
     } catch (error) {
       console.error("Error signing in with Google:", error.message);
       alert("Failed to sign in with Google. Please try again.");
@@ -47,7 +49,8 @@ function Signup() {
       if (user) {
         await setDoc(doc(db, "users", user.uid), {
           email: user.email,
-          username: username,
+          username: username, 
+          avatar: finn
         });
       }
       console.log("User data saved to Firestore.");

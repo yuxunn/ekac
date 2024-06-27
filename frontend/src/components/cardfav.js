@@ -29,11 +29,15 @@ const CardFav = ({ title, level, time, calories, type, rating, isFavourited }) =
   useEffect(() => {
     const fetchDocId = async () => {
       const user = auth.currentUser;
-      if (user) {
-        const q = doc(db, 'users', user.uid, 'favourites', title);
-        const docSnap = await getDoc(q);
-        setDocId(docSnap.id);
-        setIsFavourite(docSnap.exists());
+      if (user && title) { 
+        const favDocRef = doc(db, 'users', user.uid, 'favourites', title);
+        const docSnap = await getDoc(favDocRef);
+        if (docSnap.exists()) {
+          setDocId(docSnap.id);
+          setIsFavourite(true);
+        } else {
+          setIsFavourite(false);
+        }
       }
     };
 
