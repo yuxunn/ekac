@@ -8,7 +8,7 @@ import pen from '../assets/pen.png';
 import bin from '../assets/bin.png';
 import { doc, setDoc, deleteDoc, getDocs, collection, query, where } from 'firebase/firestore';
 
-const Card = ({ title, level, time, calories, type, rating }) => {
+const Card = ({ title, level, time, calories, type, rating, recId }) => {
   const [isFavourite, setIsFavourite] = useState(false);
   const [docId, setDocId] = useState(null);
   const navigate = useNavigate();
@@ -30,11 +30,12 @@ const Card = ({ title, level, time, calories, type, rating }) => {
       try {
         const user = auth.currentUser;
         if (user) {
-          const q = query(collection(db, 'users', user.uid, 'recipes'), where("title", "==", title));
+          const q = query(collection(db, 'users', user.uid, 'recipes'), where("recId", "==", recId));
           const querySnapshot = await getDocs(q);
           if (!querySnapshot.empty) {
             const document = querySnapshot.docs[0];
             setDocId(document.id);
+            
             console.log('Fetched document ID:', document.id);
           }
         }
@@ -44,7 +45,7 @@ const Card = ({ title, level, time, calories, type, rating }) => {
     };
 
     fetchDocId();
-  }, [title]);
+  }, [docId]);
 
   const handleDeleteClick = async (event) => {
     event.preventDefault();
@@ -59,7 +60,7 @@ const Card = ({ title, level, time, calories, type, rating }) => {
       return;
     }
 
-    const docRef = doc(db, 'users', user.uid, 'recipes', docId);
+    const docRef = doc(db, 'users', user.uid, 'recipes', recId);
     console.log('Attempting to delete document at path:', docRef.path);
 
     try {
@@ -106,7 +107,7 @@ const Card = ({ title, level, time, calories, type, rating }) => {
 
   const handleEditClick = (event) => {
     event.preventDefault();
-    navigate('/addNewRecipe', { state: { title, level, time, calories, type, rating, docId } });
+    navigate('/addNewRecipe', { state: { title, level, time, calories, type, rating, recId } });
   }
 
   return (
