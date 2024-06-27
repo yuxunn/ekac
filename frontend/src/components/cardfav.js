@@ -65,6 +65,13 @@ const CardFav = ({ title, level, time, calories, type, rating, isFavourited, rec
     navigate('/editRecipe', { state: { title, level, time, calories, type, rating, recId } });
   };
 
+  const handleViewClick = () => {
+    console.log("recId at view", recId);
+    console.log("within view click")
+    navigate('/view', {state: {title, level, time, calories, type, rating, recId}});
+    
+  }
+
   const handleFavouriteClick = async (event) => {
     event.preventDefault();
     const user = auth.currentUser;
@@ -141,7 +148,7 @@ const CardFav = ({ title, level, time, calories, type, rating, isFavourited, rec
           <span key={i} className={i < rating ? 'text-red-500' : 'text-gray-400'}>★</span>
         ))}
       </div>
-      <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded-full">Start cooking</button>
+      <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded-full" onClick={handleViewClick}>Start cooking</button>
     </div>
   );
 };

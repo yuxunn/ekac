@@ -12,6 +12,7 @@ import { SearchProvider } from './components/searchContext';
 import Chatbot from './components/chatbot';
 import Profile from './pages/profile';
 import EditPage from './pages/edit';
+import ViewRecipePage from './pages/viewRecipePage';
 
 const App = () => {
   return (
@@ -42,7 +43,13 @@ const App = () => {
               />
             }
           />
-          
+          <Route
+          path= "/view"
+          element= {
+            <ProtectedRoute
+            element= {<ViewRecipePage/>}/>
+          }/>
+        
           <Route
             path="/profile"
             element={
