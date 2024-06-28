@@ -12,15 +12,16 @@ const ViewRecipePage = () => {
   const [rating, setRating] = useState("");
   const [description, setDescription] = useState("");
   const [recId, setRecId] = useState("");
+  const [image, setImage] = useState("")
 
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (location.state) {
-      const { title, level, time, calories, type, rating, description, recId } =
-        location.state;
+      const { title, level, time, calories, type, rating, description, recId, imageUrl } = location.state;
       console.log(location.state);
+      console.log(imageUrl)
       setTitle(title);
       setLevel(level);
       setTime(time);
@@ -31,6 +32,7 @@ const ViewRecipePage = () => {
       setType(type);
       setRating(rating);
       setDescription(description || "");
+      setImage(imageUrl);
     }
   }, [location.state]);
 
@@ -46,6 +48,16 @@ const ViewRecipePage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
         <div className="flex justify-center mb-4"></div>
+        <div className="flex justify-center mb-4">
+          {image && (
+            <img
+              src={image}
+              alt="Recipe"
+              className="w-full h-auto rounded-lg"
+              style={{ width: '300px', height: '300px', objectFit: 'cover' }}
+            />
+          )}
+        </div>
         <div className="flex flex-col items-center">
           <p>Title: {title}</p>
           <p>Time: {time} </p>
