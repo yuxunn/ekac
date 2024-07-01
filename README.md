@@ -1,7 +1,10 @@
 # EKAC - One Stop Recipe Website
 
 * To launch the website locally, clone the repository, `cd` into the `frontend`folder before running `npm run start`. 
-* To access the deployed website, go to https://ekac-437bc.web.app/ This website is preliminary deployed as of 11/06/2024. 
+* To access the deployed website, go to https://ekac-437bc.web.app/ This website is preliminary deployed as of 01/07/2024. 
+
+## Vision
+* Clean, homely UI that welcomes all users. Ekac focuses on ensuring that users are able to navigate through the website easily.
 
 ## Motivation 
 * Centralised platform for aspiring bakers who have trouble finding recipes for their desired bakes. 
@@ -11,5 +14,5 @@
 ## Tech Stack 
 * Tailwind CSS (frontend)
 * React (frontend)
-* Firebase (Backend + database)
-
+* Firebase (Backend + storage)
+* BotPress (ChatBot integration)
