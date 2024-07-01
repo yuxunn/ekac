@@ -8,7 +8,7 @@ import bin from '../assets/bin.png';
 import pen from '../assets/pen.png';
 import { PiBowlFoodBold } from 'react-icons/pi'; 
 
-const CardFav = ({ title, level, time, calories, type, rating, isFavourited, recId, imageUrl }) => {
+const CardFav = ({ title, level, time, calories, type, rating, description, isFavourited, recId, imageUrl }) => {
   const [isFavourite, setIsFavourite] = useState(isFavourited);
   const [docId, setDocId] = useState(null);
   const navigate = useNavigate();
@@ -67,7 +67,8 @@ const CardFav = ({ title, level, time, calories, type, rating, isFavourited, rec
   const handleViewClick = () => {
     console.log("recId at view", recId);
     console.log("within view click")
-    navigate('/view', { state: { title, level, time, calories, type, rating, recId, imageUrl } });
+    console.log(description)
+    navigate('/view', { state: { title, level, time, calories, description, type, rating, recId, imageUrl } });
   }
 
   const handleFavouriteClick = async (event) => {
