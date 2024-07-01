@@ -61,7 +61,6 @@ const Profile = () => {
   };
 
   const avatars = [cat, panda, finn, dog, teenager, young];
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
@@ -76,7 +75,8 @@ const Profile = () => {
           {userDetails ? (
             <>
               <p>Email: {userDetails.email}</p>
-              <p>Username: {userDetails.username}</p>
+              <p className="mb-4">Username: {userDetails.username}</p>
+              <p className="font-bold"> Select a new avatar below! </p>
               <AvatarSelector avatars={avatars} onSelect={handleAvatarSelect} />
             </>
           ) : (
