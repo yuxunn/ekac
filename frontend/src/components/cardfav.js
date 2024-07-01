@@ -6,10 +6,9 @@ import filledheart from '../assets/filledheart.png';
 import heart from '../assets/heart.png';
 import bin from '../assets/bin.png';
 import pen from '../assets/pen.png';
-
 import { PiBowlFoodBold } from 'react-icons/pi'; 
 
-const CardFav = ({ title, level, time, calories, type, rating, isFavourited, recId , imageUrl}) => {
+const CardFav = ({ title, level, time, calories, type, rating, isFavourited, recId, imageUrl }) => {
   const [isFavourite, setIsFavourite] = useState(isFavourited);
   const [docId, setDocId] = useState(null);
   const navigate = useNavigate();
@@ -68,8 +67,7 @@ const CardFav = ({ title, level, time, calories, type, rating, isFavourited, rec
   const handleViewClick = () => {
     console.log("recId at view", recId);
     console.log("within view click")
-    navigate('/view', {state: {title, level, time, calories, type, rating, recId, imageUrl}});
-    
+    navigate('/view', { state: { title, level, time, calories, type, rating, recId, imageUrl } });
   }
 
   const handleFavouriteClick = async (event) => {
@@ -132,7 +130,11 @@ const CardFav = ({ title, level, time, calories, type, rating, isFavourited, rec
         </button>
       </div>
       <div className="w-16 h-16 mb-4">
-        {defaultIcon}
+        {imageUrl ? (
+          <img src={imageUrl} alt="Recipe" className="w-16 h-16 object-cover rounded-full" />
+        ) : (
+          defaultIcon
+        )}
       </div>
       <h2 className="text-xl font-bold text-center mb-2">{title}</h2>
       <p className="text-gray-600 text-center">{level}</p>
