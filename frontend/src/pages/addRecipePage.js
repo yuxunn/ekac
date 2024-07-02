@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../components/firebase";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import Navbar from "../components/navbar";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
 
 const AddRecipePage = () => {
   const [title, setTitle] = useState("");
@@ -32,7 +36,6 @@ const AddRecipePage = () => {
         description,
         docId,
         recId,
-        
       } = location.state;
 
       setTitle(title);
@@ -46,7 +49,6 @@ const AddRecipePage = () => {
       setRecId(recId);
     }
   }, [location.state]);
-
 
   const handleFileChange = (event) => {
     if (event.target.files.length > 0) {
@@ -63,7 +65,7 @@ const AddRecipePage = () => {
         const userRecipeRef = isNewRecipe
           ? doc(collection(db, "users", user.uid, "recipes"))
           : doc(db, "users", user.uid, "recipes", recId);
-  
+
         const recipeData = {
           title,
           level,
@@ -76,13 +78,13 @@ const AddRecipePage = () => {
           createdAt: new Date(),
           recId: userRecipeRef.id,
         };
-  
+
         await setDoc(userRecipeRef, recipeData);
-        const newRecId = userRecipeRef.id;  
-        setRecId(newRecId); 
-  
-        let imageUrl = '';
-  
+        const newRecId = userRecipeRef.id;
+        setRecId(newRecId);
+
+        let imageUrl = "";
+
         if (image) {
           const storage = getStorage();
           const storageRef = ref(storage, `recipes/${newRecId}/${image.name}`);
@@ -91,27 +93,27 @@ const AddRecipePage = () => {
           console.log("Image uploaded successfully");
           imageUrl = await getDownloadURL(storageRef);
           console.log("Image URL:", imageUrl);
-  
+
           await setDoc(userRecipeRef, { imageUrl }, { merge: true });
         }
-  
+
         const globalRecipeRef = isNewRecipe
-          ? doc(collection(db, 'recipes'))
-          : doc(db, 'recipes', newRecId);  
-  
+          ? doc(collection(db, "recipes"))
+          : doc(db, "recipes", newRecId);
+
         await setDoc(globalRecipeRef, { ...recipeData, imageUrl });
-  
-        console.log('Recipe added/updated successfully in both collections');
-        navigate('/home', { state: { recId: newRecId } }); 
+
+        console.log("Recipe added/updated successfully in both collections");
+        navigate("/home", { state: { recId: newRecId } });
       } else {
-        console.log('User is not authenticated');
+        console.log("User is not authenticated");
       }
     } catch (error) {
-      console.error('Error adding/updating recipe:', error.message);
-      alert('Error adding/updating recipe: ' + error.message);
+      console.error("Error adding/updating recipe:", error.message);
+      alert("Error adding/updating recipe: " + error.message);
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300 p-6">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
@@ -130,7 +132,6 @@ const AddRecipePage = () => {
               type="file"
               id="image"
               accept="image/*"
-              
               onChange={(e) => handleFileChange(e)}
               className="w-full p-3 border rounded-lg"
             />
@@ -158,14 +159,23 @@ const AddRecipePage = () => {
             >
               Level
             </label>
-            <input
-              type="text"
-              id="level"
-              placeholder="Level (e.g., Beginner, Intermediate, Advanced)"
-              value={level}
-              onChange={(e) => setLevel(e.target.value)}
-              className="w-full p-3 border rounded-lg"
-            />
+
+            <FormControl fullWidth>
+              <InputLabel id="level">Difficulty</InputLabel>
+              <Select
+                labelId="level"
+                id="demo-simple-select"
+                placeholder="Level (e.g., Beginner, Intermediate, Advanced)"
+                value={level}
+                label="level"
+                onChange={(e) => setLevel(e.target.value)}
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                <MenuItem value="Beginner">Beginner</MenuItem>
+                <MenuItem value="Intermediate">Intermediate</MenuItem>
+                <MenuItem value="Advanced">Advanced</MenuItem>
+              </Select>
+            </FormControl>
           </div>
           <div className="mb-6 grid grid-cols-2 gap-4">
             <div>
@@ -208,14 +218,26 @@ const AddRecipePage = () => {
             >
               Type
             </label>
-            <input
-              type="text"
-              id="type"
-              placeholder="Type (e.g., Meat, Fish, Vege)"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full p-3 border rounded-lg"
-            />
+            <FormControl fullWidth>
+              <InputLabel id="type">Type</InputLabel>
+              <Select
+                labelId="Type"
+                id="demo-simple-select"
+                placeholder="Type (e.g., Chocolate, Matcha, Vege)"
+                value={type}
+                label="level"
+                onChange={(e) => setType(e.target.value)}
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                <MenuItem value="Matcha">🍵 Matcha</MenuItem>
+                <MenuItem value="Meat">🍖 Meat</MenuItem>
+                <MenuItem value="Chocolate"> 🍫 Chocolate</MenuItem>
+                <MenuItem value="Fish"> 🐟 Fish</MenuItem>
+                <MenuItem value="Vege"> 🥗 Vege</MenuItem>
+                <MenuItem value="Strawberry"> 🍓 Strawberry</MenuItem>
+                <MenuItem value="default"> 🍲 Others</MenuItem>
+              </Select>
+            </FormControl>
           </div>
           <div className="mb-6">
             <label
@@ -224,14 +246,26 @@ const AddRecipePage = () => {
             >
               Rating (1-5)
             </label>
-            <input
-              type="number"
-              id="rating"
-              placeholder="Rating (1-5)"
-              value={rating}
-              onChange={(e) => setRating(e.target.value)}
-              className="w-full p-3 border rounded-lg"
-            />
+            <FormControl fullWidth>
+              <InputLabel id="level">Rating</InputLabel>
+              <Select
+                labelId="Rating"
+                id="Rating"
+                placeholder="Rating (1 to 5)"
+                value={rating}
+                label="level"
+                onChange={(e) => setRating(e.target.value)}
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+
+
+              </Select>
+            </FormControl>
           </div>
           <div className="mb-6">
             <label
