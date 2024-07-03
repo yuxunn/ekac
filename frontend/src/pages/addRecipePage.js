@@ -8,6 +8,10 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Navbar from "../components/navbar";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import add from "../assets/add.png";
+
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AddRecipePage = () => {
@@ -21,6 +25,7 @@ const AddRecipePage = () => {
   const [docId, setDocId] = useState("");
   const [recId, setRecId] = useState("");
   const [image, setImage] = useState("");
+  const [ingredients, setIngredients] = useState([{ name: "", amount: "" }]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -45,6 +50,7 @@ const AddRecipePage = () => {
       setType(type);
       setRating(rating);
       setDescription(description || "");
+      setIngredients(ingredients || [{ name: "", amount: "" }]);
       setDocId(docId);
       setRecId(recId);
     }
@@ -54,6 +60,22 @@ const AddRecipePage = () => {
     if (event.target.files.length > 0) {
       setImage(event.target.files[0]);
     }
+  };
+
+  const handleIngredientChange = (index, field, value) => {
+    const newIngredients = [...ingredients];
+    newIngredients[index][field] = value;
+    setIngredients(newIngredients);
+  };
+
+  const handleAddIngredient = () => {
+    setIngredients([...ingredients, { name: "", amount: "" }]);
+  };
+
+  const handleRemoveIngredient = (index) => {
+    const newIngredients = [...ingredients];
+    newIngredients.splice(index, 1);
+    setIngredients(newIngredients);
   };
 
   const handleSubmit = async (event) => {
@@ -77,6 +99,7 @@ const AddRecipePage = () => {
           userId: user.uid,
           createdAt: new Date(),
           recId: userRecipeRef.id,
+          ingredients
         };
 
         await setDoc(userRecipeRef, recipeData);
@@ -262,12 +285,52 @@ const AddRecipePage = () => {
                 <MenuItem value={3}>3</MenuItem>
                 <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
-
-
               </Select>
             </FormControl>
           </div>
           <div className="mb-6">
+            <div className="mb-6">
+              <h3 className="block text-gray-700 text-sm font-bold mb-2">
+                Ingredients
+              </h3>
+              {ingredients.map((ingredient, index) => (
+                <div key={index} className="flex items-center mb-2">
+                  <input
+                    type="text"
+                    placeholder="Ingredient"
+                    value={ingredient.name}
+                    onChange={(e) =>
+                      handleIngredientChange(index, "name", e.target.value)
+                    }
+                    className="w-full p-3 border rounded-lg mr-2"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Amount"
+                    value={ingredient.amount}
+                    onChange={(e) =>
+                      handleIngredientChange(index, "amount", e.target.value)
+                    }
+                    className="w-full p-3 border rounded-lg ml-2"
+                  />
+                  <IconButton onClick={() => handleRemoveIngredient(index)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </div>
+              ))}
+              <button
+                type="button"
+                className="toolbar-button mr-2"
+                onClick={handleAddIngredient}
+              >
+                <img
+                  alt="add"
+                  className="add"
+                  src={add}
+                  style={{ width: "24px", height: "24px" }}
+                />
+              </button>
+            </div>
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="description"
