@@ -12,20 +12,33 @@ const ViewRecipePage = () => {
   const [description, setDescription] = useState("");
   const [recId, setRecId] = useState("");
   const [image, setImage] = useState("");
-
+  const [ingredients, setIngredients] = useState([{ name: "", amount: "" }]);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (location.state) {
-      const { title, level, time, calories, type, rating, description, recId, imageUrl } = location.state;
+      const {
+        title,
+        level,
+        time,
+        calories,
+        type,
+        rating,
+        description,
+        recId,
+        imageUrl,
+        ingredients,
+      } = location.state;
       setTitle(title);
       setLevel(level);
       setTime(time);
       setRecId(recId);
       setCalories(calories);
       setType(type);
+      setIngredients(ingredients);
       setRating(rating);
+      console.log(ingredients);
       setDescription(description || "");
       setImage(imageUrl);
     }
@@ -49,8 +62,7 @@ const ViewRecipePage = () => {
               src={image}
               alt="Recipe"
               className="rounded-lg w-full h-full object-cover"
-
-              style={{ width: '300px', height: '300px', objectFit: 'cover' }}
+              style={{ width: "300px", height: "300px", objectFit: "cover" }}
             />
           )}
         </div>
@@ -59,11 +71,35 @@ const ViewRecipePage = () => {
           <p className="text-lg mb-2">Level: {level}</p>
           <p className="text-lg mb-2">Time: {time} minutes</p>
           <p className="text-lg mb-2">Calories: {calories}</p>
+          <div className="text-lg mb-2">
+            {/* <h2 className="font-semibold">Ingredients:</h2> */}
+            <table className="min-w-full border-2">
+              <thead>
+                <tr className=" borderBottom: 1px  ">
+                  <th className="text-left border-2">Ingredient</th>
+                  <th className="text-left border-2">Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ingredients.map((ingredient, index) => (
+                  <tr key={index} className="border-b-2 last:border-b-0">
+                    <td>{ingredient.name}</td>
+                    <td>{ingredient.amount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <h2 className="text-xl font-semibold mb-2">Description:</h2>
-          <p className="text-gray-700 whitespace-pre-line mb-4">{description}</p>
+          <p className="text-gray-700 whitespace-pre-line mb-4">
+            {description}
+          </p>
           <div className="flex mb-4">
             {[...Array(5)].map((_, i) => (
-              <span key={i} className={i < rating ? "text-red-500" : "text-gray-400"}>
+              <span
+                key={i}
+                className={i < rating ? "text-red-500" : "text-gray-400"}
+              >
                 ★
               </span>
             ))}
