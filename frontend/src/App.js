@@ -13,7 +13,6 @@ import Chatbot from './components/chatbot';
 import Profile from './pages/profile';
 import EditPage from './pages/edit';
 import ViewRecipePage from './pages/viewRecipePage';
-import LandingPage from './pages/landingPage';
 
 const App = () => {
   return (
@@ -23,7 +22,6 @@ const App = () => {
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<LogIn />} />
-          <Route path ="/landingpage" element={<LandingPage />} />
           <Route
             path="/home"
             element={
