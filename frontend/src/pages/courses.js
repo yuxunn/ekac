@@ -1,11 +1,10 @@
-import React, { useRef } from "react";
+import React from "react";
 import raspberrytart from "../assets/raspberrytart.jpg";
 import blueberrypie from "../assets/blueberry-pie.jpg";
 import EventCard from "../components/eventcard";
-import { MapContainer, TileLayer } from "react-leaflet";
+import SimpleMap from "../components/map";
 import strawberrycake from "../assets/strawberrycake.png";
 import "leaflet/dist/leaflet.css";
-import SimpleMap from "../components/map";
 
 const Courses = () => {
   const events = [
@@ -36,7 +35,6 @@ const Courses = () => {
           <div className="flex items-center">
             <img className="ml-2 w-8 h-8" src={strawberrycake} alt="logo" />
             <h1 className="font-bold ml-2 text-gray-600 mr-6">E.KAC</h1>
-            {/* <h2 className="ml-32 text-2xl font-bold text-gray-900">Events in Singapore</h2> */}
           </div>
           <div className=" flex space-x-4">
             <button
@@ -61,7 +59,7 @@ const Courses = () => {
               className=" hover:bg-pink-100 text-black font-bold py-2 px-4 rounded"
               onClick={() => (window.location.href = "/login")}
             >
-              Log-out
+              Logout
             </button>
             <div className="ml-4">
               <input
@@ -70,7 +68,6 @@ const Courses = () => {
                 className="ml-4 mt-1 block w-64 px-2 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
-           
           </div>
         </div>
       </header>
