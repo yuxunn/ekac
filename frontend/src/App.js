@@ -13,6 +13,8 @@ import Chatbot from './components/chatbot';
 import Profile from './pages/profile';
 import EditPage from './pages/edit';
 import ViewRecipePage from './pages/viewRecipePage';
+import Courses from './pages/courses';
+import AddEvent from './pages/addEventPage';
 
 const App = () => {
   return (
@@ -22,6 +24,8 @@ const App = () => {
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<LogIn />} />
+          <Route path="/courses" element={<Courses/>}/>
+          <Route path="/addEvent" element={<AddEvent/>}/>
           <Route
             path="/home"
             element={
