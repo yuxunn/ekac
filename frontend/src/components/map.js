@@ -17,12 +17,11 @@ const SimpleMap = () => {
 L.Marker.prototype.options.icon = DefaultIcon;
 
   return (
-    // Make sure you set the height and width of the map container otherwise the map won't show
     <MapContainer
       center={[latitude, longitude]}
       zoom={13}
       ref={mapRef}
-      style={{ height: "100%", width: "40vw" }}
+      style={{ height: "90vh", width: "40vw" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

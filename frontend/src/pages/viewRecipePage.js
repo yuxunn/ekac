@@ -62,7 +62,7 @@ const ViewRecipePage = () => {
               src={image}
               alt="Recipe"
               className="rounded-lg w-full h-full object-cover"
-              style={{ width: "500px", height: "1000px", objectFit: "cover" }}
+              style={{ width: "500px", height: "10px", objectFit: "cover" }}
             />
           )}
         </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import raspberrytart from "../assets/raspberrytart.jpg";
 import blueberrypie from "../assets/blueberry-pie.jpg";
 import EventCard from "../components/eventcard";
@@ -7,6 +8,7 @@ import strawberrycake from "../assets/strawberrycake.png";
 import "leaflet/dist/leaflet.css";
 
 const Courses = () => {
+  const navigate = useNavigate();
   const events = [
     {
       image: raspberrytart,
@@ -28,6 +30,10 @@ const Courses = () => {
     },
   ];
 
+  const handleAddEventClick = () => {
+    navigate("/addEvent");
+  };
+
   return (
     <div className="min-h-screen">
       <header className="shadow">
@@ -36,9 +42,9 @@ const Courses = () => {
             <img className="ml-2 w-8 h-8" src={strawberrycake} alt="logo" />
             <h1 className="font-bold ml-2 text-gray-600 mr-6">E.KAC</h1>
           </div>
-          <div className=" flex space-x-4">
+          <div className="flex space-x-4">
             <button
-              className=" hover:bg-pink-100 text-black font-bold py-2 px-4 rounded"
+              className="hover:bg-pink-100 text-black font-bold py-2 px-4 rounded"
               onClick={() => (window.location.href = "/home")}
             >
               Home
@@ -50,13 +56,13 @@ const Courses = () => {
               Profile
             </button>
             <button
-              className=" hover:bg-pink-100 text-black font-bold py-2 px-4 rounded"
+              className="hover:bg-pink-100 text-black font-bold py-2 px-4 rounded"
               onClick={() => (window.location.href = "/community")}
             >
               Community
             </button>
             <button
-              className=" hover:bg-pink-100 text-black font-bold py-2 px-4 rounded"
+              className="hover:bg-pink-100 text-black font-bold py-2 px-4 rounded"
               onClick={() => (window.location.href = "/login")}
             >
               Logout
@@ -73,7 +79,7 @@ const Courses = () => {
       </header>
 
       <main className="flex bg-pink-100">
-        <aside className="border-hidden h-screen w-1/6 bg-pink-100 p-4 shadow">
+        <aside className="border-hidden h-90 w-1/6 bg-pink-100 p-4 shadow">
           <h2 className="text-lg font-semibold">Filters</h2>
           <div className="mt-4">
             <h3 className="text-md font-medium">Category</h3>
@@ -139,7 +145,7 @@ const Courses = () => {
           </div>
         </aside>
 
-        <section className="flex-1 p-4">
+        <section className="relative flex-1 p-4">
           <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
             {events.map((event, index) => (
               <EventCard
@@ -153,6 +159,14 @@ const Courses = () => {
               />
             ))}
           </div>
+          <button
+            className="absolute bottom-2 right-4 bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl shadow-lg"
+            onClick={
+              handleAddEventClick
+            }
+          >
+            +
+          </button>
         </section>
         <div>
           <SimpleMap />
