@@ -24,6 +24,8 @@ const Navbar = ({ isSidebarOpen }) => {
     switch (location.pathname) {
       case '/home':
         return 'Recipes';
+      case '/recipes':
+        return 'Recipes';
       case '/addNewRecipe':
         return 'Add New Recipe';
       case '/favourites':
