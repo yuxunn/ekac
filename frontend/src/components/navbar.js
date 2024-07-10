@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../components/firebase'; 
 import { SearchContext } from '../components/searchContext';
-import { FaSearch } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
 import strawberrycake from "../assets/strawberrycake.png";
 
 const Navbar = ({ isSidebarOpen }) => {
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
   const location = useLocation();
+  const isAddRecipePage = location.pathname === '/addNewRecipe';
+
 
   const handleLogout = async () => {
     try {
@@ -40,8 +41,8 @@ const Navbar = ({ isSidebarOpen }) => {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 bg-pink-100 shadow-md">
-<div className="flex items-center space-x-2 md:space-x-4">
+<div className={`flex items-center justify-between p-4 bg-pink-100 shadow-lg`} style={{ height: '64px' }}>
+      <div className="flex items-center space-x-2 md:space-x-4">
         <div className={`flex items-center transition-margin duration-300 ${isSidebarOpen ? 'ml-8' : 'ml-0'}`}>
           <img className="w-6 h-6 text-gray-500 mr-2" src={strawberrycake} alt="Logo"/>
           <span className="text-xl font-bold text-black whitespace-nowrap">ekac -</span>
