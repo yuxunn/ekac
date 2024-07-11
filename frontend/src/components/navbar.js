@@ -5,17 +5,27 @@ import { SearchContext } from '../components/searchContext';
 import { useLocation } from 'react-router-dom';
 import strawberrycake from "../assets/strawberrycake.png";
 import Loading2 from '../animations/loading2';
-
+import Modal from '../components/modal';
 const Navbar = ({ isSidebarOpen }) => {
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
   const location = useLocation();
   const isAddRecipePage = location.pathname === '/addNewRecipe';
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
-  const handleLogout = async (event) => {
-    event.preventDefault();
+  const confirmLogout = () => {
+    handleLogout();
+    closeModal();
+  };
+  const handleLogout = async () => {
     setIsSubmitting(true);
     try {
       await signOut(auth);
@@ -59,11 +69,18 @@ const Navbar = ({ isSidebarOpen }) => {
         </div>
       </div>
       <button
-        onClick={handleLogout}
+        onClick={openModal}
         className="ml-4 px-4 py-2 bg-black text-white rounded-md hover:bg-gray focus:outline-none"
       >
         Log Out
       </button>
+      <Modal
+      isOpen = {isModalOpen}
+      onClose ={closeModal}
+      onConfirm ={confirmLogout}
+      title = "Logout"
+      message = "Are you sure you want to sign out?"
+    />
     </div>
   );
 };
