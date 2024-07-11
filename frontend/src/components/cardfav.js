@@ -7,10 +7,12 @@ import heart from '../assets/heart.png';
 import bin from '../assets/bin.png';
 import pen from '../assets/pen.png';
 import { PiBowlFoodBold } from 'react-icons/pi'; 
+import Modal from '../components/modal';
 
 const CardFav = ({ title, level, time, calories, type, rating, description, isFavourited, recId, imageUrl, ingredients }) => {
   const [isFavourite, setIsFavourite] = useState(isFavourited);
   const [docId, setDocId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const defaultIcon = <PiBowlFoodBold className="w-16 h-16" />;
@@ -43,8 +45,7 @@ const CardFav = ({ title, level, time, calories, type, rating, description, isFa
     fetchDocId();
   }, [title]);
 
-  const handleDeleteClick = async (event) => {
-    event.preventDefault();
+  const handleDeleteClick = async () => {
     const user = auth.currentUser;
     if (!user || !recId) {
       console.error('No user is signed in or document ID not found');
@@ -102,10 +103,23 @@ const CardFav = ({ title, level, time, calories, type, rating, description, isFa
     }
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const confirmDelete = () => {
+    handleDeleteClick();
+    closeModal();
+  };
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative">
       <div className="absolute top-2 left-2 flex items-center">
-        <button className="toolbar-button mr-2" onClick={handleDeleteClick}>
+        <button className="toolbar-button mr-2" onClick={openModal}>
           <img 
             alt="delete"
             className="delete"
@@ -152,6 +166,13 @@ const CardFav = ({ title, level, time, calories, type, rating, description, isFa
         ))}
       </div>
       <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded-full" onClick={handleViewClick}>Start cooking</button>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onConfirm={confirmDelete}
+        title="Delete Post"
+        message="Are you sure you want to delete this post? This action cannot be undone."
+      />
     </div>
   );
 };
