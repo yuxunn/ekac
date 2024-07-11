@@ -1,17 +1,22 @@
-import React, { useContext } from 'react';
+import React, { useContext , useState} from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../components/firebase'; 
 import { SearchContext } from '../components/searchContext';
 import { useLocation } from 'react-router-dom';
 import strawberrycake from "../assets/strawberrycake.png";
+import Loading2 from '../animations/loading2';
 
 const Navbar = ({ isSidebarOpen }) => {
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
   const location = useLocation();
   const isAddRecipePage = location.pathname === '/addNewRecipe';
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
-  const handleLogout = async () => {
+
+  const handleLogout = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
     try {
       await signOut(auth);
       console.log('User logged out successfully');
@@ -39,6 +44,10 @@ const Navbar = ({ isSidebarOpen }) => {
         return '';
     }
   };
+
+  if (isSubmitting) {
+    return <Loading2/>;
+  }
 
   return (
 <div className={`flex items-center justify-between p-4 bg-pink-100 shadow-lg`} style={{ height: '64px' }}>

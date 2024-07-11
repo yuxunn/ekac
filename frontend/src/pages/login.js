@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../components/firebase';
 import googleLogo from "../assets/google.png";
+import Loading2 from '../animations/loading2';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -49,6 +50,10 @@ function Login() {
     }
   };
 
+
+if (isSubmitting) {
+  return <Loading2/>
+}
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">

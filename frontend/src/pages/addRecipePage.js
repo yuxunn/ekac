@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { TextField } from "@mui/material";
-
+import Loading from "../animations/loading";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AddRecipePage = () => {
@@ -24,6 +24,8 @@ const AddRecipePage = () => {
   const [recId, setRecId] = useState("");
   const [image, setImage] = useState("");
   const [ingredients, setIngredients] = useState([{ name: "", amount: "" }]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -93,6 +95,7 @@ const AddRecipePage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
     try {
       const user = auth.currentUser;
       if (user) {
@@ -149,6 +152,10 @@ const AddRecipePage = () => {
       alert("Error adding/updating recipe: " + error.message);
     }
   };
+
+  if (isSubmitting) {
+    return <Loading />; 
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen blue-200 p-6">
@@ -360,9 +367,10 @@ const AddRecipePage = () => {
           </div>
           <button
             type="submit"
+
             className="w-full py-3 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded-lg hover:from-blue-400 hover:to-pink-500"
           >
-            {docId ? "Update Recipe" : "Add Recipe"}
+            {isSubmitting ? 'Adding Recipe...' : 'Add Recipe'}
           </button>
         </form>
       </div>

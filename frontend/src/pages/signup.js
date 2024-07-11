@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { setDoc, doc } from "firebase/firestore";
 import {  createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, db, provider } from "../components/firebase";
+import Loading2 from '../animations/loading2';
 
 import finn from "../assets/finn-the-human-duotone-svgrepo-com.svg"
 
@@ -49,6 +50,7 @@ function Signup() {
       alert("Passwords do not match!");
       return;
     }
+    setIsSubmitting(true);
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
@@ -63,7 +65,7 @@ function Signup() {
         });
       }
       console.log("User data saved to Firestore.");
-      window.location.href = "/login";
+      window.location.href = "/home";
     } catch (error) {
       console.log(error.message);
       setIsSubmitting(false);
@@ -85,6 +87,9 @@ function Signup() {
     }
   };
 
+  if (isSubmitting) {
+    return <Loading2/>
+  }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
