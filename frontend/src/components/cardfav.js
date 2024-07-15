@@ -87,12 +87,7 @@ const CardFav = ({ title, level, time, calories, type, rating, description, isFa
         console.log('Favorite removed successfully');
       } else {
         const favouriteData = {
-          title,
-          level,
-          time,
-          calories,
-          type,
-          rating,
+          title, level, time, calories, description, type, rating, recId, imageUrl, ingredients 
         };
         await setDoc(favDoc, favouriteData);
         console.log('Favorite saved successfully');

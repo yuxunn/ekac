@@ -10,6 +10,7 @@ const MainLayout = ({ children }) => {
   const location = useLocation();
   const isAddRecipePage = location.pathname === '/addNewRecipe';
   const isRecipePage = location.pathname === '/recipes';
+  const isEditRecipePage = location.pathname === '/editRecipe';
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
@@ -17,9 +18,9 @@ const MainLayout = ({ children }) => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className={`flex-1 min-h-screen ${isAddRecipePage ? 'bg-[#ede9fe]' : 'bg-pink-100'}`}>
+      <div className={`flex-1 min-h-screen ${isAddRecipePage? 'bg-[#ede9fe]' : isEditRecipePage? 'bg-[#ede9fe]': 'bg-pink-100'}`}>
         <Navbar />
-        {!isAddRecipePage &&  (
+        {!isAddRecipePage &&  !isEditRecipePage && (
           <div className="flex justify-between items-center p-4">
             <div className="flex items-center">
               <FaFilter />

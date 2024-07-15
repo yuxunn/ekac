@@ -48,6 +48,8 @@ const Navbar = ({ isSidebarOpen }) => {
         return 'My Favourites';
       case '/courses':
         return 'Courses';
+      case '/editRecipe':
+        return 'edit recipe'
       case '/community':
         return 'Community';
       default:

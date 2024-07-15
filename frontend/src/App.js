@@ -43,7 +43,10 @@ const App = () => {
             path="/editRecipe"
             element={
               <ProtectedRoute
-                element={<EditPage />}
+                element={
+                <MainLayout>
+                <EditPage />
+                </MainLayout>}
               />
             }
           />

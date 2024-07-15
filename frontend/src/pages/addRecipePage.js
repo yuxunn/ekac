@@ -93,17 +93,19 @@ const AddRecipePage = () => {
     setIngredients(newIngredients);
   };
 
+
+  //
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
     try {
       const user = auth.currentUser;
       if (user) {
-        const isNewRecipe = !docId;
+        const isNewRecipe = !docId; 
         const userRecipeRef = isNewRecipe
           ? doc(collection(db, "users", user.uid, "recipes"))
           : doc(db, "users", user.uid, "recipes", recId);
-
+  
         const recipeData = {
           title,
           level,
@@ -117,31 +119,31 @@ const AddRecipePage = () => {
           recId: userRecipeRef.id,
           ingredients,
         };
-
+  
         await setDoc(userRecipeRef, recipeData);
         const newRecId = userRecipeRef.id;
         setRecId(newRecId);
-
+  
         let imageUrl = "";
-
+  
         if (image) {
           const storage = getStorage();
-          const storageRef = ref(storage, `recipes/${newRecId}/${image.name}`);
+          const storageRef = ref(storage, `recipes/${user.uid}/${newRecId}/${image.name}`);
           console.log("Uploading image:", image.name);
           await uploadBytes(storageRef, image);
           console.log("Image uploaded successfully");
           imageUrl = await getDownloadURL(storageRef);
           console.log("Image URL:", imageUrl);
-
+  
           await setDoc(userRecipeRef, { imageUrl }, { merge: true });
         }
-
+  
         const globalRecipeRef = isNewRecipe
           ? doc(collection(db, "recipes"))
           : doc(db, "recipes", newRecId);
-
+  
         await setDoc(globalRecipeRef, { ...recipeData, imageUrl });
-
+  
         console.log("Recipe added/updated successfully in both collections");
         navigate("/home", { state: { recId: newRecId } });
       } else {
@@ -150,9 +152,11 @@ const AddRecipePage = () => {
     } catch (error) {
       console.error("Error adding/updating recipe:", error.message);
       alert("Error adding/updating recipe: " + error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
+  
   if (isSubmitting) {
     return <Loading />; 
   }
