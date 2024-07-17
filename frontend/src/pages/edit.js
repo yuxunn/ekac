@@ -296,11 +296,12 @@ const EditRecipe = () => {
                 <IconButton onClick={() => handleRemoveIngredient(index)}>
                   <DeleteIcon />
                 </IconButton>
+                <IconButton onClick={handleAddIngredient}>
+                    <AddIcon />
+                  </IconButton>
               </div>
             ))}
-            <IconButton onClick={handleAddIngredient}>
-              <AddIcon />
-            </IconButton>
+          
           </div>
           <button
             type="submit"

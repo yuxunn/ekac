@@ -93,8 +93,6 @@ const AddRecipePage = () => {
     setIngredients(newIngredients);
   };
 
-
-  //
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
