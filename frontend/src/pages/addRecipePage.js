@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../components/firebase";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Navbar from "../components/navbar";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import add from "../assets/add.png";
-
+import AddIcon from "@mui/icons-material/Add";
+import { TextField } from "@mui/material";
+import Loading from "../animations/loading";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AddRecipePage = () => {
@@ -26,6 +24,8 @@ const AddRecipePage = () => {
   const [recId, setRecId] = useState("");
   const [image, setImage] = useState("");
   const [ingredients, setIngredients] = useState([{ name: "", amount: "" }]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -56,6 +56,21 @@ const AddRecipePage = () => {
     }
   }, [location.state]);
 
+  const preventPasteNegative = (e) => {
+    const clipboardData = e.clipboardData || window.clipboardData;
+    const pastedData = parseFloat(clipboardData.getData("text"));
+
+    if (pastedData < 0) {
+      e.preventDefault();
+    }
+  };
+
+  const preventMinus = (e) => {
+    if (e.code === "Minus") {
+      e.preventDefault();
+    }
+  };
+
   const handleFileChange = (event) => {
     if (event.target.files.length > 0) {
       setImage(event.target.files[0]);
@@ -80,14 +95,15 @@ const AddRecipePage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
     try {
       const user = auth.currentUser;
       if (user) {
-        const isNewRecipe = !docId;
+        const isNewRecipe = !docId; 
         const userRecipeRef = isNewRecipe
           ? doc(collection(db, "users", user.uid, "recipes"))
           : doc(db, "users", user.uid, "recipes", recId);
-
+  
         const recipeData = {
           title,
           level,
@@ -99,33 +115,33 @@ const AddRecipePage = () => {
           userId: user.uid,
           createdAt: new Date(),
           recId: userRecipeRef.id,
-          ingredients
+          ingredients,
         };
-
+  
         await setDoc(userRecipeRef, recipeData);
         const newRecId = userRecipeRef.id;
         setRecId(newRecId);
-
+  
         let imageUrl = "";
-
+  
         if (image) {
           const storage = getStorage();
-          const storageRef = ref(storage, `recipes/${newRecId}/${image.name}`);
+          const storageRef = ref(storage, `recipes/${user.uid}/${newRecId}/${image.name}`);
           console.log("Uploading image:", image.name);
           await uploadBytes(storageRef, image);
           console.log("Image uploaded successfully");
           imageUrl = await getDownloadURL(storageRef);
           console.log("Image URL:", imageUrl);
-
+  
           await setDoc(userRecipeRef, { imageUrl }, { merge: true });
         }
-
+  
         const globalRecipeRef = isNewRecipe
           ? doc(collection(db, "recipes"))
           : doc(db, "recipes", newRecId);
-
+  
         await setDoc(globalRecipeRef, { ...recipeData, imageUrl });
-
+  
         console.log("Recipe added/updated successfully in both collections");
         navigate("/home", { state: { recId: newRecId } });
       } else {
@@ -134,11 +150,17 @@ const AddRecipePage = () => {
     } catch (error) {
       console.error("Error adding/updating recipe:", error.message);
       alert("Error adding/updating recipe: " + error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+  
+  if (isSubmitting) {
+    return <Loading />; 
+  }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300 p-6">
+    <div className="flex items-center justify-center min-h-screen blue-200 p-6">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
         <h2 className="text-2xl font-bold mb-6 text-center">
           {docId ? "Edit Recipe" : "Add New Recipe"}
@@ -160,13 +182,13 @@ const AddRecipePage = () => {
             />
           </div>
           <div className="mb-6">
-            <label
+            <label 
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="title"
             >
               Recipe Title
             </label>
-            <input
+            <input required
               type="text"
               id="title"
               placeholder="Recipe Title"
@@ -184,7 +206,6 @@ const AddRecipePage = () => {
             </label>
 
             <FormControl fullWidth>
-              <InputLabel id="level">Difficulty</InputLabel>
               <Select
                 labelId="level"
                 id="demo-simple-select"
@@ -208,13 +229,18 @@ const AddRecipePage = () => {
               >
                 Time (in minutes)
               </label>
-              <input
-                type="number"
-                id="time"
+
+              <TextField required
+                id="outlined-number"
                 placeholder="Time (in minutes)"
-                value={time}
+                type="number"
                 onChange={(e) => setTime(e.target.value)}
+                onPaste={preventPasteNegative}
+                onKeyPress={preventMinus}
                 className="w-full p-3 border rounded-lg"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </div>
             <div>
@@ -224,13 +250,18 @@ const AddRecipePage = () => {
               >
                 Calories
               </label>
-              <input
-                type="number"
-                id="calories"
+
+              <TextField required
+                id="outlined-number"
                 placeholder="Calories"
-                value={calories}
+                type="number"
                 onChange={(e) => setCalories(e.target.value)}
+                onPaste={preventPasteNegative}
+                onKeyPress={preventMinus}
                 className="w-full p-3 border rounded-lg"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </div>
           </div>
@@ -242,8 +273,7 @@ const AddRecipePage = () => {
               Type
             </label>
             <FormControl fullWidth>
-              <InputLabel id="type">Type</InputLabel>
-              <Select
+              <Select required
                 labelId="Type"
                 id="demo-simple-select"
                 placeholder="Type (e.g., Chocolate, Matcha, Vege)"
@@ -270,8 +300,7 @@ const AddRecipePage = () => {
               Rating (1-5)
             </label>
             <FormControl fullWidth>
-              <InputLabel id="level">Rating</InputLabel>
-              <Select
+              <Select required
                 labelId="Rating"
                 id="Rating"
                 placeholder="Rating (1 to 5)"
@@ -299,6 +328,7 @@ const AddRecipePage = () => {
                     type="text"
                     placeholder="Ingredient"
                     value={ingredient.name}
+                    onPaste={preventPasteNegative}
                     onChange={(e) =>
                       handleIngredientChange(index, "name", e.target.value)
                     }
@@ -308,6 +338,7 @@ const AddRecipePage = () => {
                     type="text"
                     placeholder="Amount"
                     value={ingredient.amount}
+                    onPaste={preventPasteNegative}
                     onChange={(e) =>
                       handleIngredientChange(index, "amount", e.target.value)
                     }
@@ -316,28 +347,19 @@ const AddRecipePage = () => {
                   <IconButton onClick={() => handleRemoveIngredient(index)}>
                     <DeleteIcon />
                   </IconButton>
+                  <IconButton onClick={handleAddIngredient}>
+                    <AddIcon />
+                  </IconButton>
                 </div>
               ))}
-              <button
-                type="button"
-                className="toolbar-button mr-2"
-                onClick={handleAddIngredient}
-              >
-                <img
-                  alt="add"
-                  className="add"
-                  src={add}
-                  style={{ width: "24px", height: "24px" }}
-                />
-              </button>
             </div>
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="description"
             >
-              Description
+              Recipe Instructions
             </label>
-            <textarea
+            <textarea required
               id="description"
               placeholder="Write a detailed description of the recipe..."
               value={description}
@@ -347,9 +369,10 @@ const AddRecipePage = () => {
           </div>
           <button
             type="submit"
+
             className="w-full py-3 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded-lg hover:from-blue-400 hover:to-pink-500"
           >
-            {docId ? "Update Recipe" : "Add Recipe"}
+            {isSubmitting ? 'Adding Recipe...' : 'Add Recipe'}
           </button>
         </form>
       </div>

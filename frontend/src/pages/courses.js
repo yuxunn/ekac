@@ -34,13 +34,16 @@ const Courses = () => {
     navigate("/addEvent");
   };
 
+  const handleHomeClick =() => {
+    navigate("/recipes");
+  }
   return (
     <div className="min-h-screen">
       <header className="shadow">
         <div className="max-w-7xl rounded-lg py-4 px-4 flex items-center">
           <div className="flex items-center">
-            <img className="ml-2 w-8 h-8" src={strawberrycake} alt="logo" />
-            <h1 className="font-bold ml-2 text-gray-600 mr-6">E.KAC</h1>
+            <img className="ml-2 w-8 h-8" src={strawberrycake} alt="logo" onClick={handleHomeClick} />
+            <h1 className="font-bold ml-2 text-gray-600 mr-6" onClick={handleHomeClick}>E.KAC</h1>
           </div>
           <div className="flex space-x-4">
             <button
