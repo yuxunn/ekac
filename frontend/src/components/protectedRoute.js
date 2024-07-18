@@ -8,13 +8,10 @@ const ProtectedRoute = ({ element }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(isAuthenticated);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log('User is authenticated:', user);
         setIsAuthenticated(true);
       } else {
-        console.log('User is not authenticated');
         setIsAuthenticated(false);
         navigate('/login');
       }
@@ -24,8 +21,7 @@ const ProtectedRoute = ({ element }) => {
   }, [navigate]);
 
   if (isAuthenticated === null) {
-    console.log('Authentication state is null, returning null');
-    return null; // Prevent redirection if the state is not determined yet
+    return null; 
   }
 
   return isAuthenticated ? element : null;

@@ -30,6 +30,7 @@ const Navbar = ({ isSidebarOpen }) => {
     try {
       await signOut(auth);
       console.log('User logged out successfully');
+      sessionStorage.removeItem('sessionKey');
       window.location.href = "/login";
     } catch (error) {
       console.log('Error logging out: ', error.message);

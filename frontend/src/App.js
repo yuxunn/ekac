@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import MainLayout from './components/mainlayout';
 import Signup from './pages/signup';
 import LogIn from './pages/login';
@@ -17,9 +17,17 @@ import Courses from './pages/courses';
 import AddEvent from './pages/addEventPage';
 
 const App = () => {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = sessionStorage.getItem('sessionKey');
+    if (!user) {
+      navigate('/login');
+    }
+  }, [navigate]);
   return (
     <SearchProvider>
-      <Router>
         <Routes>
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<Signup />} />
@@ -119,7 +127,6 @@ const App = () => {
           }
         />
         </Routes>
-      </Router>
     </SearchProvider>
   );
 };

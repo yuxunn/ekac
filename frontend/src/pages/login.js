@@ -27,8 +27,14 @@ function Login() {
     setIsSubmitting(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      const user = auth.currentUser;
+      if (user) { 
+      const sessionKey = await user.getIdToken();
+      console.log("session storeage")
+      sessionStorage.setItem('sessionKey', sessionKey);
       console.log("logged in successfully");
       window.location.href = "/home";
+      }
     } catch (error) {
       console.log(error.message);
       setIsSubmitting(false);
@@ -41,8 +47,15 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log("Google signin");
-      window.location.href = "/home";
+      if (user) {
+        console.log("Google signin");
+        const sessionKey = await user.getIdToken();
+        console.log("session storeage")
+        sessionStorage.setItem('sessionKey', sessionKey);
+        
+        window.location.href = "/home";
+      }
+      
     } catch (error) {
       console.log("error");
       alert("failed to login TT");
