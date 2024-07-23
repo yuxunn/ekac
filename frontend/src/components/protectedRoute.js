@@ -8,6 +8,7 @@ const ProtectedRoute = ({ element }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const user = sessionStorage.getItem('sessionKey');
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsAuthenticated(true);

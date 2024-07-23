@@ -40,9 +40,9 @@ const Navbar = ({ isSidebarOpen }) => {
   const getPageTitle = () => {
     switch (location.pathname) {
       case '/home':
-        return 'recipes';
+        return 'My Recipes';
       case '/recipes':
-        return 'recipes';
+        return 'My Recipes';
       case '/addNewRecipe':
         return 'Add New Recipe';
       case '/favourites':
