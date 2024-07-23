@@ -6,6 +6,7 @@ import { FaFilter } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { auth, db } from "../components/firebase";
 import { collection, query, getDocs } from "firebase/firestore";
+import Community from "../pages/community";
 
 const recipeTypes = {
   Meat: '🍖',
