@@ -77,7 +77,8 @@ const Profile = () => {
               <p>Email: {userDetails.email}</p>
               <p className="mb-4">Username: {userDetails.username}</p>
               <p className="font-bold"> Select a new avatar below! </p>
-              <AvatarSelector avatars={avatars} onSelect={handleAvatarSelect} />
+              <AvatarSelector avatars={avatars} onSelect={handleAvatarSelect} 
+              />
             </>
           ) : (
             <p>Loading user details...</p>

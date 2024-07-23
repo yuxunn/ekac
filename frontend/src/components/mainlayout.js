@@ -55,6 +55,7 @@ const MainLayout = ({ children }) => {
       newFilteredRecipes = recipes
         .slice()
         .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        console.log(newFilteredRecipes)
     }
 
     setFilteredRecipes(newFilteredRecipes);
@@ -92,7 +93,7 @@ const MainLayout = ({ children }) => {
                 onChange={handleFilterChange}
                 className="border border-gray-300 rounded p-2 shadow-sm"
               >
-                <option value="None">None</option>
+                <option value="None">No Filter</option>
                 <option value="DateCreated">Date Created</option>
                 {Object.keys(recipeTypes).map(type => (
                   <option key={type} value={type}>{recipeTypes[type]} {type}</option>
