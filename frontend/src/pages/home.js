@@ -1,40 +1,20 @@
-// src/pages/Home.js
 import React, { useEffect, useState, useContext } from 'react';
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '../components/firebase'; 
-import Card from '../components/card';
-import { SearchContext } from '../components/searchContext';
 import CardFav from '../components/cardfav';
+import { SearchContext } from '../components/searchContext';
 
-const Home = () => {
-  const [recipes, setRecipes] = useState([]);
+const Home = ({ recipes }) => {
+  const [localRecipes, setLocalRecipes] = useState([]);
   const { searchTerm } = useContext(SearchContext);
 
   useEffect(() => {
-    const fetchRecipes = () => {
-      const user = auth.currentUser;
+    if (recipes) {
+      setLocalRecipes(recipes);
+    }
+  }, [recipes]);
 
-      if (user) {
-        const q = query(collection(db, 'users', user.uid, 'recipes'));
-        console.log(q)
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          const recipesData = [];
-          querySnapshot.forEach((doc) => {
-            recipesData.push({ id: doc.id, ...doc.data() });
-          });
-          setRecipes(recipesData);
-        });
-
-        return () => unsubscribe();
-      } else {
-        console.log('User is not authenticated');
-      }
-    };
-
-    fetchRecipes();
-  }, []);
-
-  const filteredRecipes = recipes.filter(recipe =>
+  const filteredRecipes = localRecipes.filter(recipe =>
     recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -46,7 +26,7 @@ const Home = () => {
         ))
       ) : (
         <div className="col-span-full text-center text-gray-600">
-        You have not added any recipes yet! 😭 Start to add your own recipes now! 🍰
+          You have not added any recipes yet! 😭 Start to add your own recipes now! 🍰
         </div>
       )}
     </main>

@@ -30,6 +30,7 @@ const Navbar = ({ isSidebarOpen }) => {
     try {
       await signOut(auth);
       console.log('User logged out successfully');
+      sessionStorage.removeItem('sessionKey');
       window.location.href = "/login";
     } catch (error) {
       console.log('Error logging out: ', error.message);
@@ -39,9 +40,9 @@ const Navbar = ({ isSidebarOpen }) => {
   const getPageTitle = () => {
     switch (location.pathname) {
       case '/home':
-        return 'recipes';
+        return 'My Recipes';
       case '/recipes':
-        return 'recipes';
+        return 'My Recipes';
       case '/addNewRecipe':
         return 'Add New Recipe';
       case '/favourites':

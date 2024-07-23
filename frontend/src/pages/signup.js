@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import strawberrycake from '../assets/strawberrycake.png';
 import { Link } from 'react-router-dom';
 import { setDoc, doc } from "firebase/firestore";
-import {  createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, db, provider } from "../components/firebase";
 import Loading2 from '../animations/loading2';
 
 import finn from "../assets/finn-the-human-duotone-svgrepo-com.svg"
-
 import googleLogo from "../assets/google.png";
 
 function Signup() {
@@ -55,17 +54,20 @@ function Signup() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       const user = auth.currentUser;
-      console.log(user);
-      console.log("User registered successfully.");
       if (user) {
         await setDoc(doc(db, "users", user.uid), {
           email: user.email,
           username: username, 
           avatar: finn
         });
+        
+        const sessionKey = await user.getIdToken();
+        sessionStorage.setItem('sessionKey', sessionKey);
+
+        console.log("User registered successfully.");
+        console.log("User data saved to Firestore.");
+        window.location.href = "/home";
       }
-      console.log("User data saved to Firestore.");
-      window.location.href = "/home";
     } catch (error) {
       console.log(error.message);
       setIsSubmitting(false);
@@ -78,8 +80,13 @@ function Signup() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log("Google signup");
-      window.location.href = "/home";
+      if (user) {
+        const sessionKey = await user.getIdToken();
+        sessionStorage.setItem('sessionKey', sessionKey);
+
+        console.log("Google signup");
+        window.location.href = "/home";
+      }
     } catch (error) {
       console.log("error");
       alert("Failed to signup TT");

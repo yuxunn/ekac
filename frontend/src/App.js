@@ -19,13 +19,12 @@ import AddEvent from './pages/addEventPage';
 const App = () => {
   return (
     <SearchProvider>
-      <Router>
         <Routes>
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<LogIn />} />
-          <Route path="/courses" element={<Courses/>}/>
-          <Route path="/addEvent" element={<AddEvent/>}/>
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/addEvent" element={<AddEvent />} />
           <Route
             path="/home"
             element={
@@ -33,7 +32,7 @@ const App = () => {
                 element={
                   <MainLayout>
                     <Home />
-                    <Chatbot/>
+                    <Chatbot />
                   </MainLayout>
                 }
               />
@@ -44,37 +43,37 @@ const App = () => {
             element={
               <ProtectedRoute
                 element={
-                <MainLayout>
-                <EditPage />
-                </MainLayout>}
-              />
-            }
-          />
-          <Route
-          path= "/view"
-          element= {
-            <ProtectedRoute
-            element= {<ViewRecipePage/>}/>
-          }/>
-        
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute
-                element={
-                    <Profile />
+                  <MainLayout>
+                    <EditPage />
+                  </MainLayout>
                 }
               />
             }
           />
-                    <Route
+          <Route
+            path="/view"
+            element={
+              <ProtectedRoute
+                element={<ViewRecipePage />}
+              />
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute
+                element={<Profile />}
+              />
+            }
+          />
+          <Route
             path="/favourites"
             element={
               <ProtectedRoute
                 element={
                   <MainLayout>
                     <Favourites />
-                    <Chatbot/>
+                    <Chatbot />
                   </MainLayout>
                 }
               />
@@ -85,9 +84,10 @@ const App = () => {
             element={
               <ProtectedRoute
                 element={
-                <MainLayout>
-                <AddRecipePage />
-                </MainLayout>}
+                  <MainLayout>
+                    <AddRecipePage />
+                  </MainLayout>
+                }
               />
             }
           />
@@ -98,28 +98,26 @@ const App = () => {
                 element={
                   <MainLayout>
                     <Community />
-                    <Chatbot/>
-
+                    <Chatbot />
                   </MainLayout>
                 }
               />
             }
           />
           <Route
-          path="/recipes"
-          element={
-            <ProtectedRoute
-              element={
-                <MainLayout>
-                  <Home />
-                  <Chatbot/>
-                </MainLayout>
-              }
-            />
-          }
-        />
+            path="/recipes"
+            element={
+              <ProtectedRoute
+                element={
+                  <MainLayout>
+                    <Home />
+                    <Chatbot />
+                  </MainLayout>
+                }
+              />
+            }
+          />
         </Routes>
-      </Router>
     </SearchProvider>
   );
 };
