@@ -4,8 +4,8 @@ import { auth, db } from '../components/firebase';
 import CardFav from '../components/cardfav';
 import { SearchContext } from '../components/searchContext';
 
-const Favourites = () => {
-  const [recipes, setRecipes] = useState([]);
+const Favourites = ({ recipes, filter }) => {
+  const [allRecipes, setAllRecipes] = useState([]);
   const { searchTerm } = useContext(SearchContext);
 
   useEffect(() => {
@@ -14,13 +14,12 @@ const Favourites = () => {
 
       if (user) {
         const q = query(collection(db, 'users', user.uid, 'favourites'));
-        console.log(q)
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const recipesData = [];
           querySnapshot.forEach((doc) => {
             recipesData.push({ id: doc.id, ...doc.data() });
           });
-          setRecipes(recipesData);
+          setAllRecipes(recipesData);
         });
 
         return () => unsubscribe();
@@ -32,12 +31,19 @@ const Favourites = () => {
     fetchRecipes();
   }, []);
 
-  const filteredRecipes = recipes.filter(recipe =>
-    recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Apply the filter logic to the recipes
+  const filteredRecipes = allRecipes.filter(recipe => {
+    if (filter === "None" || !filter) {
+      return recipe.title.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+    if (filter === "DateCreated") {
+      return recipe.title.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+    return recipe.type === filter && recipe.title.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
-    <main className="p-4 pt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <main className="p-4 pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {filteredRecipes.length > 0 ? (
         filteredRecipes.map((recipe) => (
           <CardFav key={recipe.id} isFavorited={true} {...recipe} />
