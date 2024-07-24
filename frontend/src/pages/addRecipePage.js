@@ -88,22 +88,35 @@ const AddRecipePage = () => {
   };
 
   const handleRemoveIngredient = (index) => {
-    const newIngredients = [...ingredients];
-    newIngredients.splice(index, 1);
-    setIngredients(newIngredients);
+    if (ingredients.length > 1) {
+      const newIngredients = [...ingredients];
+      newIngredients.splice(index, 1);
+      setIngredients(newIngredients);
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
+  
+    const invalidIngredients = ingredients.some(
+      (ingredient) => !ingredient.name.trim() || !ingredient.amount.trim()
+    );
+  
+    if (invalidIngredients) {
+      alert("Please provide both name and amount for all ingredients.");
+      setIsSubmitting(false);
+      return;
+    }
+  
     try {
       const user = auth.currentUser;
       if (user) {
-        const isNewRecipe = !docId; 
+        const isNewRecipe = !docId;
         const userRecipeRef = isNewRecipe
           ? doc(collection(db, "users", user.uid, "recipes"))
           : doc(db, "users", user.uid, "recipes", recId);
-
+  
         const recipeData = {
           title,
           level,
@@ -117,13 +130,13 @@ const AddRecipePage = () => {
           recId: userRecipeRef.id,
           ingredients,
         };
-
+  
         await setDoc(userRecipeRef, recipeData);
         const newRecId = userRecipeRef.id;
         setRecId(newRecId);
-
+  
         let imageUrl = "";
-
+  
         if (image) {
           const storage = getStorage();
           const storageRef = ref(
@@ -135,16 +148,16 @@ const AddRecipePage = () => {
           console.log("Image uploaded successfully");
           imageUrl = await getDownloadURL(storageRef);
           console.log("Image URL:", imageUrl);
-
+  
           await setDoc(userRecipeRef, { imageUrl }, { merge: true });
         }
-
+  
         const globalRecipeRef = isNewRecipe
           ? doc(collection(db, "recipes"))
           : doc(db, "recipes", newRecId);
-
+  
         await setDoc(globalRecipeRef, { ...recipeData, imageUrl });
-
+  
         console.log("Recipe added/updated successfully in both collections");
         navigate("/home", { state: { recId: newRecId } });
       } else {
@@ -157,7 +170,7 @@ const AddRecipePage = () => {
       setIsSubmitting(false);
     }
   };
-
+  
   if (isSubmitting) {
     return <Loading />;
   }
@@ -345,7 +358,10 @@ const AddRecipePage = () => {
                     }
                     className="w-full p-3 border rounded-lg ml-2"
                   />
-                  <IconButton onClick={() => handleRemoveIngredient(index)}>
+                  <IconButton
+                    onClick={() => handleRemoveIngredient(index)}
+                    disabled={ingredients.length === 1}
+                  >
                     <DeleteIcon />
                   </IconButton>
                   <IconButton onClick={handleAddIngredient}>
