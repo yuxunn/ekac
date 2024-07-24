@@ -104,7 +104,7 @@ const AddRecipePage = () => {
     );
   
     if (invalidIngredients) {
-      alert("Please provide both name and amount for all ingredients.");
+      // alert("Please provide both name and amount for all ingredients.");
       setIsSubmitting(false);
       return;
     }
@@ -341,6 +341,7 @@ const AddRecipePage = () => {
                   <input
                     type="text"
                     placeholder="Ingredient"
+                    required
                     value={ingredient.name}
                     onPaste={preventPasteNegative}
                     onChange={(e) =>
@@ -353,6 +354,7 @@ const AddRecipePage = () => {
                     placeholder="Amount"
                     value={ingredient.amount}
                     onPaste={preventPasteNegative}
+                    required
                     onChange={(e) =>
                       handleIngredientChange(index, "amount", e.target.value)
                     }
