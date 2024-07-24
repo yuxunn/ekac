@@ -46,7 +46,7 @@ const Favourites = ({ recipes, filter }) => {
     <main className="p-4 pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {filteredRecipes.length > 0 ? (
         filteredRecipes.map((recipe) => (
-          <CardFav key={recipe.id} isFavorited={true} {...recipe} />
+          <CardFav key={recipe.id} isFavorited={true} {...recipe} showEditDeleteButtons={false}/>
         ))
       ) : (
         <div className="col-span-full text-center text-gray-600">
