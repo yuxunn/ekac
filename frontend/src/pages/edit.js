@@ -144,7 +144,7 @@ const EditRecipe = () => {
   };
 
   if (isSubmitting) {
-    return <Loading/>
+    return <Loading />
   }
 
   return (
@@ -153,6 +153,19 @@ const EditRecipe = () => {
         <h2 className="text-2xl font-bold mb-6">Edit Recipe</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">Image</label>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+            {imageUrl && (
+              <img src={imageUrl} alt="Recipe" className="mt-4 w-40 h-40 object-cover rounded-md" />
+            )}
+          </div>
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">Title</label>
             <input
               type="text"
@@ -169,9 +182,7 @@ const EditRecipe = () => {
               <Select
                 labelId="level"
                 id="demo-simple-select"
-                placeholder="Level (e.g., Beginner, Intermediate, Advanced)"
                 value={level}
-                label="level"
                 onChange={(e) => setLevel(e.target.value)}
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
@@ -181,42 +192,58 @@ const EditRecipe = () => {
               </Select>
             </FormControl>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time">Time (in minutes)</label>
-            <TextField required
-              id="outlined-number"
-              placeholder="Time (in minutes)"
-              type="number"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              onPaste={preventPasteNegative}
-              onKeyPress={preventMinus}
-              className="w-full p-3 border rounded-lg"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="calories">Calories</label>
-            <input
-              type="number"
-              id="calories"
-              value={calories}
-              onChange={(e) => setCalories(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
+          <div className="mb-6 grid grid-cols-2 gap-4">
+            <div>
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="time"
+              >
+                Time (in minutes)
+              </label>
+
+              <TextField
+                required
+                id="outlined-number"
+                placeholder="Time (in minutes)"
+                type="number"
+                value={time}
+                onChange={(e) => setTime(Math.max(1, e.target.value))}
+                onPaste={preventPasteNegative}
+                onKeyPress={preventMinus}
+                className="w-full p-3 border rounded-lg"
+                InputProps={{ inputProps: { min: 1 } }}
+              />
+            </div>
+            <div>
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="calories"
+              >
+                Calories
+              </label>
+
+              <TextField
+                required
+                id="outlined-number"
+                placeholder="Calories"
+                type="number"
+                value={calories}
+                onChange={(e) => setCalories(Math.max(1, e.target.value))}
+                onPaste={preventPasteNegative}
+                onKeyPress={preventMinus}
+                className="w-full p-3 border rounded-lg"
+                InputProps={{ inputProps: { min: 1 } }}
+              />
+            </div>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">Type</label>
             <FormControl fullWidth>
-              <Select required
-                labelId="Type"
+              <Select
+                required
+                labelId="type"
                 id="demo-simple-select"
-                placeholder="Type (e.g., Chocolate, Matcha, Vege)"
                 value={type}
-                label="level"
                 onChange={(e) => setType(e.target.value)}
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
@@ -233,12 +260,11 @@ const EditRecipe = () => {
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="rating">Rating</label>
             <FormControl fullWidth>
-              <Select required
+              <Select
+                required
                 labelId="Rating"
-                id="Rating"
-                placeholder="Rating (1 to 5)"
+                id="demo-simple-select"
                 value={rating}
-                label="level"
                 onChange={(e) => setRating(e.target.value)}
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
@@ -250,29 +276,8 @@ const EditRecipe = () => {
               </Select>
             </FormControl>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">Image</label>
-            <input
-              type="file"
-              id="image"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            {imageUrl && (
-              <img src={imageUrl} alt="Recipe" className="mt-4 w-40 h-40 object-cover rounded-md" />
-            )}
-          </div>
+      
+          
           <div className="mb-4">
             <h3 className="block text-gray-700 text-sm font-bold mb-2">Ingredients</h3>
             {ingredients.map((ingredient, index) => (
@@ -297,11 +302,21 @@ const EditRecipe = () => {
                   <DeleteIcon />
                 </IconButton>
                 <IconButton onClick={handleAddIngredient}>
-                    <AddIcon />
-                  </IconButton>
+                  <AddIcon />
+                </IconButton>
               </div>
             ))}
-          
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Recipe Instructions</label>
+            <textarea
+            
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              required
+            />
           </div>
           <button
             type="submit"
