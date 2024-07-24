@@ -99,7 +99,7 @@ const AddRecipePage = () => {
     try {
       const user = auth.currentUser;
       if (user) {
-        const isNewRecipe = !docId;
+        const isNewRecipe = !docId; 
         const userRecipeRef = isNewRecipe
           ? doc(collection(db, "users", user.uid, "recipes"))
           : doc(db, "users", user.uid, "recipes", recId);
@@ -107,8 +107,8 @@ const AddRecipePage = () => {
         const recipeData = {
           title,
           level,
-          time,
-          calories,
+          time: Math.max(1, time),
+          calories: Math.max(1, calories),
           type,
           rating,
           description,
@@ -185,7 +185,7 @@ const AddRecipePage = () => {
             />
           </div>
           <div className="mb-6">
-            <label
+            <label 
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="title"
             >
@@ -210,7 +210,7 @@ const AddRecipePage = () => {
             </label>
 
             <FormControl fullWidth>
-            <Select
+              <Select
                 required
                 labelId="level"
                 id="demo-simple-select"
@@ -238,13 +238,12 @@ const AddRecipePage = () => {
                 id="outlined-number"
                 placeholder="Time (in minutes)"
                 type="number"
-                onChange={(e) => setTime(e.target.value)}
+                value={time}
+                onChange={(e) => setTime(Math.max(1, e.target.value))}
                 onPaste={preventPasteNegative}
                 onKeyPress={preventMinus}
                 className="w-full p-3 border rounded-lg"
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                InputProps={{ inputProps: { min: 1 } }}
               />
             </div>
             <div>
@@ -260,13 +259,12 @@ const AddRecipePage = () => {
                 id="outlined-number"
                 placeholder="Calories"
                 type="number"
-                onChange={(e) => setCalories(e.target.value)}
+                value={calories}
+                onChange={(e) => setCalories(Math.max(1, e.target.value))}
                 onPaste={preventPasteNegative}
                 onKeyPress={preventMinus}
                 className="w-full p-3 border rounded-lg"
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                InputProps={{ inputProps: { min: 1 } }}
               />
             </div>
           </div>
@@ -304,18 +302,7 @@ const AddRecipePage = () => {
               Rating (1-5)
             </label>
             <FormControl fullWidth>
-              {/* <Select
-                required
-                labelId="Rating"
-                id="Rating"
-                placeholder="Rating (1 to 5)"
-                value={rating}
-                // label="level"
-                hiddenLabel
-                onChange={(e) => setRating(e.target.value)}
-                className="block text-gray-700 text-sm font-bold mb-2"
-              > */}
-                <Select
+              <Select
                 required
                 labelId="Rating"
                 id="demo-simple-select"
