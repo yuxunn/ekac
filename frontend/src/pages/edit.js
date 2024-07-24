@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { db, auth } from '../components/firebase';
+import { db, auth } from "../components/firebase";
 import { TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import Loading from '../animations/loading';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import Loading from "../animations/loading";
 
 const EditRecipe = () => {
   const location = useLocation();
@@ -29,16 +29,18 @@ const EditRecipe = () => {
     ingredients: initialIngredients,
   } = location.state || {};
 
-  const [title, setTitle] = useState(initialTitle || '');
-  const [level, setLevel] = useState(initialLevel || '');
-  const [time, setTime] = useState(initialTime || '');
-  const [calories, setCalories] = useState(initialCalories || '');
-  const [type, setType] = useState(initialType || '');
-  const [rating, setRating] = useState(initialRating || '');
-  const [description, setDescription] = useState(initialDescription || '');
+  const [title, setTitle] = useState(initialTitle || "");
+  const [level, setLevel] = useState(initialLevel || "");
+  const [time, setTime] = useState(initialTime || "");
+  const [calories, setCalories] = useState(initialCalories || "");
+  const [type, setType] = useState(initialType || "");
+  const [rating, setRating] = useState(initialRating || "");
+  const [description, setDescription] = useState(initialDescription || "");
   const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(initialImageUrl || '');
-  const [ingredients, setIngredients] = useState(initialIngredients || [{ name: '', amount: '' }]);
+  const [imageUrl, setImageUrl] = useState(initialImageUrl || "");
+  const [ingredients, setIngredients] = useState(
+    initialIngredients || [{ name: "", amount: "" }]
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const preventPasteNegative = (e) => {
@@ -59,7 +61,7 @@ const EditRecipe = () => {
   useEffect(() => {
     if (recId) {
       const fetchRecipe = async () => {
-        const docRef = doc(db, 'users', auth.currentUser.uid, 'recipes', recId);
+        const docRef = doc(db, "users", auth.currentUser.uid, "recipes", recId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
@@ -71,7 +73,7 @@ const EditRecipe = () => {
           setRating(data.rating);
           setDescription(data.description);
           setImageUrl(data.imageUrl);
-          setIngredients(data.ingredients || [{ name: '', amount: '' }]);
+          setIngredients(data.ingredients || [{ name: "", amount: "" }]);
         }
       };
       fetchRecipe();
@@ -91,7 +93,7 @@ const EditRecipe = () => {
   };
 
   const handleAddIngredient = () => {
-    setIngredients([...ingredients, { name: '', amount: '' }]);
+    setIngredients([...ingredients, { name: "", amount: "" }]);
   };
 
   const handleRemoveIngredient = (index) => {
@@ -106,7 +108,7 @@ const EditRecipe = () => {
     try {
       const user = auth.currentUser;
       if (user && recId) {
-        const docRef = doc(db, 'users', user.uid, 'recipes', recId);
+        const docRef = doc(db, "users", user.uid, "recipes", recId);
 
         const recipeData = {
           title,
@@ -130,21 +132,21 @@ const EditRecipe = () => {
         }
 
         await setDoc(docRef, recipeData, { merge: true });
-        console.log('Recipe updated successfully');
-        navigate('/recipes');
+        console.log("Recipe updated successfully");
+        navigate("/recipes");
       } else {
-        console.error('User is not authenticated or recipe ID is missing');
+        console.error("User is not authenticated or recipe ID is missing");
       }
     } catch (error) {
-      console.error('Error updating recipe:', error);
-      alert('Error updating recipe: ' + error.message);
+      console.error("Error updating recipe:", error);
+      alert("Error updating recipe: " + error.message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (isSubmitting) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
@@ -153,20 +155,34 @@ const EditRecipe = () => {
         <h2 className="text-2xl font-bold mb-6">Edit Recipe</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">Image</label>
-            <input
-              type="file"
-              id="image"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            {imageUrl && (
-              <img src={imageUrl} alt="Recipe" className="mt-4 w-40 h-40 object-cover rounded-md" />
-            )}
-          </div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">Title</label>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="image"
+              >
+                Image
+              </label>
+              <input
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Recipe"
+                  className="mt-4 w-40 h-40 object-cover rounded-md"
+                />
+              )}
+            </div>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="title"
+            >
+              Title
+            </label>
             <input
               type="text"
               id="title"
@@ -177,7 +193,12 @@ const EditRecipe = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="level">Level</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="level"
+            >
+              Level
+            </label>
             <FormControl fullWidth>
               <Select
                 labelId="level"
@@ -237,7 +258,12 @@ const EditRecipe = () => {
             </div>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">Type</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="type"
+            >
+              Type
+            </label>
             <FormControl fullWidth>
               <Select
                 required
@@ -258,7 +284,12 @@ const EditRecipe = () => {
             </FormControl>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="rating">Rating</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="rating"
+            >
+              Rating
+            </label>
             <FormControl fullWidth>
               <Select
                 required
@@ -276,17 +307,20 @@ const EditRecipe = () => {
               </Select>
             </FormControl>
           </div>
-      
-          
+
           <div className="mb-4">
-            <h3 className="block text-gray-700 text-sm font-bold mb-2">Ingredients</h3>
+            <h3 className="block text-gray-700 text-sm font-bold mb-2">
+              Ingredients
+            </h3>
             {ingredients.map((ingredient, index) => (
               <div key={index} className="flex items-center mb-2">
                 <input
                   type="text"
                   placeholder="Name"
                   value={ingredient.name}
-                  onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
+                  onChange={(e) =>
+                    handleIngredientChange(index, "name", e.target.value)
+                  }
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
                   required
                 />
@@ -294,11 +328,17 @@ const EditRecipe = () => {
                   type="text"
                   placeholder="Amount"
                   value={ingredient.amount}
-                  onChange={(e) => handleIngredientChange(index, 'amount', e.target.value)}
+                  onChange={(e) =>
+                    handleIngredientChange(index, "amount", e.target.value)
+                  }
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   required
                 />
-                <IconButton onClick={() => handleRemoveIngredient(index)}>
+                <IconButton
+                  onClick={() => handleRemoveIngredient(index)}
+                  disabled={ingredients.length === 1}
+                >
+                  {" "}
                   <DeleteIcon />
                 </IconButton>
                 <IconButton onClick={handleAddIngredient}>
@@ -308,9 +348,13 @@ const EditRecipe = () => {
             ))}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Recipe Instructions</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="description"
+            >
+              Recipe Instructions
+            </label>
             <textarea
-            
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -322,7 +366,7 @@ const EditRecipe = () => {
             type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            {isSubmitting ? 'Updating...' : 'Update Recipe'}
+            {isSubmitting ? "Updating..." : "Update Recipe"}
           </button>
         </form>
       </div>
