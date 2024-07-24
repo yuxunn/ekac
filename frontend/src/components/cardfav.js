@@ -9,7 +9,7 @@ import pen from '../assets/pen.png';
 import { PiBowlFoodBold } from 'react-icons/pi'; 
 import Modal from '../components/modal';
 
-const CardFav = ({ title, level, time, calories, type, rating, description, isFavourited, recId, imageUrl, ingredients }) => {
+const CardFav = ({ title, level, time, calories, type, rating, description, isFavourited, recId, imageUrl, ingredients, showEditDeleteButtons = true }) => {
   const [isFavourite, setIsFavourite] = useState(isFavourited);
   const [docId, setDocId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -113,15 +113,7 @@ const CardFav = ({ title, level, time, calories, type, rating, description, isFa
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center relative">
-      <div className="absolute top-2 left-2 flex items-center">
-        <button className="toolbar-button mr-2" onClick={openModal}>
-          <img 
-            alt="delete"
-            className="delete"
-            src={bin}
-            style={{ width: '24px', height: '24px' }} 
-          />
-        </button>
+      <div className="absolute top-2 left-2">
         <button className="toolbar-button" onClick={handleFavouriteClick}>
           <img 
             alt="favourite"
@@ -130,14 +122,28 @@ const CardFav = ({ title, level, time, calories, type, rating, description, isFa
             style={{ width: '24px', height: '24px' }} 
           />
         </button>
-        <button className="toolbar-button ml-2" onClick={handleEditClick}>
-          <img 
-            alt="edit"
-            className = "edit"
-            src= {pen}
-            style={{width:'24px', height:'24px'}}
-            />
-        </button>
+      </div>
+      <div className="absolute top-2 right-2 flex items-center">
+        {showEditDeleteButtons && (
+          <>
+            <button className="toolbar-button ml-2" onClick={openModal}>
+              <img 
+                alt="delete"
+                className="delete"
+                src={bin}
+                style={{ width: '24px', height: '24px' }} 
+              />
+            </button>
+            <button className="toolbar-button ml-2" onClick={handleEditClick}>
+              <img 
+                alt="edit"
+                className = "edit"
+                src= {pen}
+                style={{width:'24px', height:'24px'}}
+                />
+            </button>
+          </>
+        )}
       </div>
       <div className="w-16 h-16 mb-4">
         {imageUrl ? (

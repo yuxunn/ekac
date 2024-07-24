@@ -5,7 +5,7 @@ import SearchBar from "./searchBar";
 import { FaFilter } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { auth, db } from "../components/firebase";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, onSnapshot } from "firebase/firestore";
 import Community from "../pages/community";
 
 const recipeTypes = {
@@ -27,23 +27,29 @@ const MainLayout = ({ children }) => {
   const isEditRecipePage = location.pathname === "/editRecipe";
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        try {
-          const q = query(collection(db, "users", user.uid, "recipes"));
-          const querySnapshot = await getDocs(q);
-          const fetchedRecipes = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-          setRecipes(fetchedRecipes);
-        } catch (error) {
-          console.error("Error fetching recipes:", error);
-        }
-      }
-    };
+    const user = auth.currentUser;
+    if (user) {
+      const q = query(collection(db, "users", user.uid, "recipes"));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const fetchedRecipes = querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            createdAt: data.createdAt.toDate() 
+          };
+        });
 
-    fetchRecipes();
+        fetchedRecipes.sort((a, b) => b.createdAt - a.createdAt);
+
+        setRecipes(fetchedRecipes);
+        setFilteredRecipes(fetchedRecipes); 
+      });
+
+      
+      return () => unsubscribe();
+    }
   }, []);
-
   useEffect(() => {
     let newFilteredRecipes = recipes;
 
@@ -54,8 +60,8 @@ const MainLayout = ({ children }) => {
     } else if (filter === "DateCreated") {
       newFilteredRecipes = recipes
         .slice()
-        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-        console.log(newFilteredRecipes)
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); 
+      console.log(newFilteredRecipes);
     }
 
     setFilteredRecipes(newFilteredRecipes);
@@ -94,7 +100,7 @@ const MainLayout = ({ children }) => {
                 className="border border-gray-300 rounded p-2 shadow-sm"
               >
                 <option value="None">No Filter</option>
-                <option value="DateCreated">Date Created</option>
+                <option value="DateCreated">Oldest to Latest</option>
                 {Object.keys(recipeTypes).map(type => (
                   <option key={type} value={type}>{recipeTypes[type]} {type}</option>
                 ))}

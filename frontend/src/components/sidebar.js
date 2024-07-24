@@ -15,7 +15,7 @@ import {
   getDoc,
   collection,
   query,
-  getDocs,
+  getDocs, onSnapshot
 } from "firebase/firestore";
 import { auth, db } from "../components/firebase";
 import { Link, useNavigate } from "react-router-dom";
@@ -45,9 +45,17 @@ const Sidebar = () => {
     }
   };
 
-  useEffect(() => {
+    useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       fetchUserData(user);
+      if (user) {
+        const q = query(collection(db, "users", user.uid, "recipes"));
+        const unsubscribeRecipes = onSnapshot(q, (querySnapshot) => {
+          setRecipeCount(querySnapshot.size);
+        });
+        // Cleanup listener on unmount
+        return () => unsubscribeRecipes();
+      }
     });
 
     const handleResize = () => {
@@ -62,6 +70,7 @@ const Sidebar = () => {
     };
   }, []);
 
+  
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
