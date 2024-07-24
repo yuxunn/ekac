@@ -99,11 +99,11 @@ const AddRecipePage = () => {
     try {
       const user = auth.currentUser;
       if (user) {
-        const isNewRecipe = !docId; 
+        const isNewRecipe = !docId;
         const userRecipeRef = isNewRecipe
           ? doc(collection(db, "users", user.uid, "recipes"))
           : doc(db, "users", user.uid, "recipes", recId);
-  
+
         const recipeData = {
           title,
           level,
@@ -117,31 +117,34 @@ const AddRecipePage = () => {
           recId: userRecipeRef.id,
           ingredients,
         };
-  
+
         await setDoc(userRecipeRef, recipeData);
         const newRecId = userRecipeRef.id;
         setRecId(newRecId);
-  
+
         let imageUrl = "";
-  
+
         if (image) {
           const storage = getStorage();
-          const storageRef = ref(storage, `recipes/${user.uid}/${newRecId}/${image.name}`);
+          const storageRef = ref(
+            storage,
+            `recipes/${user.uid}/${newRecId}/${image.name}`
+          );
           console.log("Uploading image:", image.name);
           await uploadBytes(storageRef, image);
           console.log("Image uploaded successfully");
           imageUrl = await getDownloadURL(storageRef);
           console.log("Image URL:", imageUrl);
-  
+
           await setDoc(userRecipeRef, { imageUrl }, { merge: true });
         }
-  
+
         const globalRecipeRef = isNewRecipe
           ? doc(collection(db, "recipes"))
           : doc(db, "recipes", newRecId);
-  
+
         await setDoc(globalRecipeRef, { ...recipeData, imageUrl });
-  
+
         console.log("Recipe added/updated successfully in both collections");
         navigate("/home", { state: { recId: newRecId } });
       } else {
@@ -154,9 +157,9 @@ const AddRecipePage = () => {
       setIsSubmitting(false);
     }
   };
-  
+
   if (isSubmitting) {
-    return <Loading />; 
+    return <Loading />;
   }
 
   return (
@@ -182,13 +185,14 @@ const AddRecipePage = () => {
             />
           </div>
           <div className="mb-6">
-            <label 
+            <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="title"
             >
               Recipe Title
             </label>
-            <input required
+            <input
+              required
               type="text"
               id="title"
               placeholder="Recipe Title"
@@ -206,12 +210,11 @@ const AddRecipePage = () => {
             </label>
 
             <FormControl fullWidth>
-              <Select
+            <Select
+                required
                 labelId="level"
                 id="demo-simple-select"
-                placeholder="Level (e.g., Beginner, Intermediate, Advanced)"
                 value={level}
-                label="level"
                 onChange={(e) => setLevel(e.target.value)}
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
@@ -230,7 +233,8 @@ const AddRecipePage = () => {
                 Time (in minutes)
               </label>
 
-              <TextField required
+              <TextField
+                required
                 id="outlined-number"
                 placeholder="Time (in minutes)"
                 type="number"
@@ -251,7 +255,8 @@ const AddRecipePage = () => {
                 Calories
               </label>
 
-              <TextField required
+              <TextField
+                required
                 id="outlined-number"
                 placeholder="Calories"
                 type="number"
@@ -273,12 +278,11 @@ const AddRecipePage = () => {
               Type
             </label>
             <FormControl fullWidth>
-              <Select required
-                labelId="Type"
+              <Select
+                required
+                labelId="type"
                 id="demo-simple-select"
-                placeholder="Type (e.g., Chocolate, Matcha, Vege)"
                 value={type}
-                label="level"
                 onChange={(e) => setType(e.target.value)}
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
@@ -300,12 +304,22 @@ const AddRecipePage = () => {
               Rating (1-5)
             </label>
             <FormControl fullWidth>
-              <Select required
+              {/* <Select
+                required
                 labelId="Rating"
                 id="Rating"
                 placeholder="Rating (1 to 5)"
                 value={rating}
-                label="level"
+                // label="level"
+                hiddenLabel
+                onChange={(e) => setRating(e.target.value)}
+                className="block text-gray-700 text-sm font-bold mb-2"
+              > */}
+                <Select
+                required
+                labelId="Rating"
+                id="demo-simple-select"
+                value={rating}
                 onChange={(e) => setRating(e.target.value)}
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
@@ -359,7 +373,8 @@ const AddRecipePage = () => {
             >
               Recipe Instructions
             </label>
-            <textarea required
+            <textarea
+              required
               id="description"
               placeholder="Write a detailed description of the recipe..."
               value={description}
@@ -369,10 +384,9 @@ const AddRecipePage = () => {
           </div>
           <button
             type="submit"
-
             className="w-full py-3 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded-lg hover:from-blue-400 hover:to-pink-500"
           >
-            {isSubmitting ? 'Adding Recipe...' : 'Add Recipe'}
+            {isSubmitting ? "Adding Recipe..." : "Add Recipe"}
           </button>
         </form>
       </div>
