@@ -96,7 +96,7 @@ const ViewRecipePage = () => {
           </div>
           <h2 className="text-xl font-semibold mb-2 ">Description:</h2>
           <p className="text-gray-700 whitespace-pre-line break-words">{description}</p>
-          <div className="flex mb-4">
+          {/* <div className="flex mb-4">
             {[...Array(5)].map((_, i) => (
               <span
                 key={i}
@@ -105,7 +105,7 @@ const ViewRecipePage = () => {
                 ★
               </span>
             ))}
-          </div>
+          </div> */}
           <button
             onClick={handleBackButton}
             className="w-full py-2 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded hover:bg-gradient-to-l"

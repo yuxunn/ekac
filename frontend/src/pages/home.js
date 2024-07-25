@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '../components/firebase'; 
+import {Link} from 'react-router-dom'
 import CardFav from '../components/cardfav';
 import { SearchContext } from '../components/searchContext';
 
@@ -26,7 +27,7 @@ const Home = ({ recipes }) => {
         ))
       ) : (
         <div className="col-span-full text-center text-gray-600">
-          You have not added any recipes yet! 😭 Start to add your own recipes now! 🍰
+          You have not added any recipes yet! 😭 Start to <Link to='/addNewRecipe' className="text-blue-500">add</Link> your own recipes now! 🍰
         </div>
       )}
     </main>
