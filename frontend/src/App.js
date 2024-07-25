@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   useNavigate,
+  useLocation
 } from "react-router-dom";
 import MainLayout from "./components/mainlayout";
 import Signup from "./pages/signup";
@@ -23,13 +24,14 @@ import AddEvent from "./pages/addEventPage";
 
 const App = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const user = sessionStorage.getItem("sessionKey");
-    if (!user) {
+    if (!user && location.pathname !== "/signup") {
       navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
   return (
     <SearchProvider>
       <Routes>
