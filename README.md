@@ -29,4 +29,4 @@
 * Filter: Filter recipes according to their types or date created.
 
 ## About the project 
-* EKAC is a 2 month long passion project, built with the intention to improve my web development skills. I had a lot of fun trying out new technology, and going through the trial and error process whilst working on this web application. Feel free to test out the website, and have a good day ahead! :)
+* EKAC is a 2 month long passion project, built with the intention to improve my web development skills. I had a lot of fun trying out new technology, and to go through the trial and error process whilst working on this web application. Feel free to test out the website, and have a good day ahead! :)
