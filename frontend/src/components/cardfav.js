@@ -62,6 +62,15 @@ const CardFav = ({ title, level, time, calories, type, description, isFavourited
         const globalRecipeDocId = globalRecipeDocs[0].id;
         await deleteDoc(doc(db, 'recipes', globalRecipeDocId));
         console.log('Recipe removed successfully from global recipes');
+
+
+        const favRef = doc(db, 'users', user.uid, 'favourites', title);
+        const favDoc = await getDoc(favRef);
+        if (favDoc.exists()) {
+          await deleteDoc(favRef);
+          console.log('Favorite removed successfully');
+        }
+
       } else {
         console.error('No recipe with the specified title found in global recipes');
       }
