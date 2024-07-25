@@ -1,4 +1,4 @@
-# EKAC - One Stop Recipe Website
+# EKAC - Recipe Blog Website
 
 * To launch the website locally, clone the repository, `cd` into the `frontend`folder before running `npm run start`. 
 * To access the deployed website, go to https://ekac-437bc.web.app/ This website is preliminary deployed as of 25/07/2024. 
