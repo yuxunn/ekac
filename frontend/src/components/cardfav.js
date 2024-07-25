@@ -181,6 +181,8 @@ const handleUpvote = async () => {
     upvotes: increment(1)
   });
 
+  console.log("Upvotes updated in my rec");
+
   if (favDoc2.exists()) {
     await updateDoc(favRef2, {
       upvotes: increment(1)

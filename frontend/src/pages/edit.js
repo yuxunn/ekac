@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, query, collection, where } from "firebase/firestore";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -129,7 +129,26 @@ const EditRecipe = () => {
 
         await setDoc(docRef, recipeData, { merge: true });
         console.log("Recipe updated successfully");
-        navigate("/recipes");
+        const globalRecipesQuery = query(collection(db, 'recipes'), where('title', '==', title));
+        const globalRecipesSnapshot = await getDocs(globalRecipesQuery);
+        const globalRecipeDocs = globalRecipesSnapshot.docs;
+  
+        if (globalRecipeDocs.length > 0) {
+          const globalRecipeDocId = globalRecipeDocs[0].id;
+          const globalRecipeRef = doc(db, 'recipes', globalRecipeDocId);
+          await setDoc(globalRecipeRef, recipeData, { merge: true });
+          console.log('Recipe updated successfully in global recipes');
+        }
+  
+        const favRef = doc(db, 'users', user.uid, 'favourites', title);
+        const favDoc = await getDoc(favRef);
+  
+        if (favDoc.exists()) {
+          await setDoc(favRef, recipeData, { merge: true });
+          console.log('Recipe updated successfully in favourites');
+        }
+  
+        navigate('/recipes');
       } else {
         console.error("User is not authenticated or recipe ID is missing");
       }
