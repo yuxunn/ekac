@@ -101,7 +101,7 @@ const AddRecipePage = () => {
     );
 
     if (invalidIngredients) {
-      alert("Please provide both name and amount for all ingredients.");
+      // alert("Please provide both name and amount for all ingredients.");
       setIsSubmitting(false);
       return;
     }

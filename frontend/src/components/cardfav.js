@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, updateDoc, increment, getDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { doc, updateDoc, increment, getDoc, deleteDoc, setDoc, getDocs , query, collection, where} from 'firebase/firestore';
 import { db, auth } from '../components/firebase';
 import filledheart from '../assets/filledheart.png';
 import heart from '../assets/heart.png';
@@ -54,6 +54,17 @@ const CardFav = ({ title, level, time, calories, type, description, isFavourited
 
     try {
       await deleteDoc(doc(db, 'users', user.uid, 'recipes', recId));
+      const globalRecipesQuery = query(collection(db, 'recipes'), where('title', '==', title));
+      const globalRecipesSnapshot = await getDocs(globalRecipesQuery);
+      const globalRecipeDocs = globalRecipesSnapshot.docs;
+    
+      if (globalRecipeDocs.length > 0) {
+        const globalRecipeDocId = globalRecipeDocs[0].id;
+        await deleteDoc(doc(db, 'recipes', globalRecipeDocId));
+        console.log('Recipe removed successfully from global recipes');
+      } else {
+        console.error('No recipe with the specified title found in global recipes');
+      }
       console.log('Recipe removed successfully');
     } catch (error) {
       console.error('Error removing recipe:', error);
@@ -191,8 +202,6 @@ const handleDownvote = async () => {
 
   console.log("Favourites document exists:", favDoc2.exists());
 };
-
-
 
   const calculateRating = () => {
     const totalVotes = (upvotes || 0) + (downvotes || 0);
