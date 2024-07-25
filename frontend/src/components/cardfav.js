@@ -150,13 +150,31 @@ const handleUpvote = async () => {
     return;
   }
 
+  const globalRecipesQuery = query(collection(db, 'recipes'), where('title', '==', title));
+  const globalRecipesSnapshot = await getDocs(globalRecipesQuery);
+  const globalRecipeDocs = globalRecipesSnapshot.docs;
+  
+  if (globalRecipeDocs.length > 0) {
+    const globalRecipeDocId = globalRecipeDocs[0].id;
+    const globalRef = doc(db, 'recipes', globalRecipeDocId);
+  
+    await updateDoc(globalRef, {
+      upvotes: increment(1)
+    });
+  
+    console.log('Document updated successfully');
+  } else {
+    console.error('No recipe with the specified title found in global recipes');
+  }
+  
+
   await updateDoc(recipeRef, {
     upvotes: increment(1)
   });
 
   if (favDoc2.exists()) {
     await updateDoc(favRef2, {
-      downvotes: increment(1)
+      upvotes: increment(1)
     });
     console.log("Upvotes updated in favourites");
   }
@@ -177,6 +195,24 @@ const handleDownvote = async () => {
 
   const recipeRef = doc(db, 'users', user.uid, 'recipes', recId);
   const recipeDoc = await getDoc(recipeRef);
+
+  const globalRecipesQuery = query(collection(db, 'recipes'), where('title', '==', title));
+  const globalRecipesSnapshot = await getDocs(globalRecipesQuery);
+  const globalRecipeDocs = globalRecipesSnapshot.docs;
+  
+  if (globalRecipeDocs.length > 0) {
+    const globalRecipeDocId = globalRecipeDocs[0].id;
+    const globalRef = doc(db, 'recipes', globalRecipeDocId);
+  
+    await updateDoc(globalRef, {
+      downvotes: increment(1)
+    });
+  
+    console.log('Document updated successfully');
+  } else {
+    console.error('No recipe with the specified title found in global recipes');
+  }
+  
 
   const favRef2 = doc(db, 'users', user.uid, 'favourites', title);
   const favDoc2 = await getDoc(favRef2);
