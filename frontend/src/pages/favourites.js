@@ -20,6 +20,7 @@ const Favourites = ({ recipes, filter }) => {
             recipesData.push({ id: doc.id, ...doc.data() });
           });
           setAllRecipes(recipesData);
+          console.log(recipesData);
         });
 
         return () => unsubscribe();
@@ -31,7 +32,6 @@ const Favourites = ({ recipes, filter }) => {
     fetchRecipes();
   }, []);
 
-  // Apply the filter logic to the recipes
   const filteredRecipes = allRecipes.filter(recipe => {
     if (filter === "None" || !filter) {
       return recipe.title.toLowerCase().includes(searchTerm.toLowerCase());

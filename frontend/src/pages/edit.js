@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, query, collection, where } from "firebase/firestore";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -22,7 +22,6 @@ const EditRecipe = () => {
     time: initialTime,
     calories: initialCalories,
     type: initialType,
-    rating: initialRating,
     description: initialDescription,
     recId,
     imageUrl: initialImageUrl,
@@ -34,7 +33,6 @@ const EditRecipe = () => {
   const [time, setTime] = useState(initialTime || "");
   const [calories, setCalories] = useState(initialCalories || "");
   const [type, setType] = useState(initialType || "");
-  const [rating, setRating] = useState(initialRating || "");
   const [description, setDescription] = useState(initialDescription || "");
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(initialImageUrl || "");
@@ -70,7 +68,6 @@ const EditRecipe = () => {
           setTime(data.time);
           setCalories(data.calories);
           setType(data.type);
-          setRating(data.rating);
           setDescription(data.description);
           setImageUrl(data.imageUrl);
           setIngredients(data.ingredients || [{ name: "", amount: "" }]);
@@ -116,7 +113,6 @@ const EditRecipe = () => {
           time,
           calories,
           type,
-          rating,
           description,
           userId: user.uid,
           ingredients,
@@ -133,7 +129,26 @@ const EditRecipe = () => {
 
         await setDoc(docRef, recipeData, { merge: true });
         console.log("Recipe updated successfully");
-        navigate("/recipes");
+        const globalRecipesQuery = query(collection(db, 'recipes'), where('title', '==', title));
+        const globalRecipesSnapshot = await getDocs(globalRecipesQuery);
+        const globalRecipeDocs = globalRecipesSnapshot.docs;
+  
+        if (globalRecipeDocs.length > 0) {
+          const globalRecipeDocId = globalRecipeDocs[0].id;
+          const globalRecipeRef = doc(db, 'recipes', globalRecipeDocId);
+          await setDoc(globalRecipeRef, recipeData, { merge: true });
+          console.log('Recipe updated successfully in global recipes');
+        }
+  
+        const favRef = doc(db, 'users', user.uid, 'favourites', title);
+        const favDoc = await getDoc(favRef);
+  
+        if (favDoc.exists()) {
+          await setDoc(favRef, recipeData, { merge: true });
+          console.log('Recipe updated successfully in favourites');
+        }
+  
+        navigate('/recipes');
       } else {
         console.error("User is not authenticated or recipe ID is missing");
       }
@@ -284,31 +299,6 @@ const EditRecipe = () => {
             </FormControl>
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="rating"
-            >
-              Rating
-            </label>
-            <FormControl fullWidth>
-              <Select
-                required
-                labelId="Rating"
-                id="demo-simple-select"
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-
-          <div className="mb-4">
             <h3 className="block text-gray-700 text-sm font-bold mb-2">
               Ingredients
             </h3>
@@ -338,7 +328,6 @@ const EditRecipe = () => {
                   onClick={() => handleRemoveIngredient(index)}
                   disabled={ingredients.length === 1}
                 >
-                  {" "}
                   <DeleteIcon />
                 </IconButton>
                 <IconButton onClick={handleAddIngredient}>
