@@ -132,7 +132,8 @@ const handleUpvote = async () => {
 
   const recipeRef = doc(db, 'users', user.uid, 'recipes', recId);
   const recipeDoc = await getDoc(recipeRef);
-
+  const favRef2 = doc(db, 'users', user.uid, 'favourites', title);
+  const favDoc2 = await getDoc(favRef2);
   if (!recipeDoc.exists()) {
     console.error('No document found to update.');
     return;
@@ -141,6 +142,18 @@ const handleUpvote = async () => {
   await updateDoc(recipeRef, {
     upvotes: increment(1)
   });
+
+  if (favDoc2.exists()) {
+    await updateDoc(favRef2, {
+      downvotes: increment(1)
+    });
+    console.log("Upvotes updated in favourites");
+  }
+
+  const updatedFavDoc = await getDoc(favRef2);
+  console.log("Updated favourites document:", updatedFavDoc.data());
+
+  console.log("Favourites document exists:", favDoc2.exists());
 };
 
 
@@ -154,6 +167,9 @@ const handleDownvote = async () => {
   const recipeRef = doc(db, 'users', user.uid, 'recipes', recId);
   const recipeDoc = await getDoc(recipeRef);
 
+  const favRef2 = doc(db, 'users', user.uid, 'favourites', title);
+  const favDoc2 = await getDoc(favRef2);
+
   if (!recipeDoc.exists()) {
     console.error('No document found to update.');
     return;
@@ -162,7 +178,20 @@ const handleDownvote = async () => {
   await updateDoc(recipeRef, {
     downvotes: increment(1)
   });
+
+  if (favDoc2.exists()) {
+    await updateDoc(favRef2, {
+      downvotes: increment(1)
+    });
+    console.log("Downvotes updated in favourites");
+  }
+
+  const updatedFavDoc = await getDoc(favRef2);
+  console.log("Updated favourites document:", updatedFavDoc.data());
+
+  console.log("Favourites document exists:", favDoc2.exists());
 };
+
 
 
   const calculateRating = () => {
