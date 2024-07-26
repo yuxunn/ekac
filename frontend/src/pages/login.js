@@ -5,12 +5,15 @@ import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../components/firebase';
 import googleLogo from "../assets/google.png";
 import Loading2 from '../animations/loading2';
+import Modal from '../components/modal'; 
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -29,14 +32,16 @@ function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       const user = auth.currentUser;
       if (user) { 
-      const sessionKey = await user.getIdToken();
-      console.log("session storeage")
-      sessionStorage.setItem('sessionKey', sessionKey);
-      console.log("logged in successfully");
-      window.location.href = "/home";
+        const sessionKey = await user.getIdToken();
+        console.log("session storeage")
+        sessionStorage.setItem('sessionKey', sessionKey);
+        console.log("logged in successfully");
+        window.location.href = "/home";
       }
     } catch (error) {
       console.log(error.message);
+      setErrorMessage("Incorrect username and/or password. Please try again. 😭");
+      setIsModalOpen(true);
       setIsSubmitting(false);
     }
   }
@@ -55,22 +60,27 @@ function Login() {
         
         window.location.href = "/home";
       }
-      
     } catch (error) {
       console.log("error");
-      alert("failed to login TT");
+      setErrorMessage("Incorrect username and/or password. Please try again. 😭");
+      setIsModalOpen(true);
       setIsSubmitting(false);
     }
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setErrorMessage('');
+  };
 
-if (isSubmitting) {
-  return <Loading2/>
-}
+  if (isSubmitting) {
+    return <Loading2/>
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-200 to-blue-300">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
-      <div className="flex items-center justify-center mb-4">
+        <div className="flex items-center justify-center mb-4">
           <img
             className="w-12 h-12 mb-2 mr-2"
             src={strawberrycake}
@@ -131,6 +141,14 @@ if (isSubmitting) {
           Login with Google
         </button>
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleCloseModal}
+        title="Login Error"
+        message={errorMessage}
+        showCancelButton={false}
+      />
     </div>
   );
 }

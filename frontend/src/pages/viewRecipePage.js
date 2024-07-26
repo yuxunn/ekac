@@ -73,42 +73,35 @@ const ViewRecipePage = () => {
           <p className="text-lg mb-2">Calories: {calories}</p>
           <div className="text-lg mb-2">
             {ingredients && ingredients.length > 0 && (
-          <div className="my-4">
-  
-            <table className="min-w-full mt-4 border-collapse border border-gray-300">
-              <thead>
-                <tr>
-                  <th className="border border-gray-300 p-2">Ingredient</th>
-                  <th className="border border-gray-300 p-2">Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ingredients.map((ingredient, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="border-r border-gray-300 p-2">{ingredient.name}</td>
-                    <td className="p-2">{ingredient.amount}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+              <div className="my-4">
+                <table className="min-w-full mt-4 border-collapse border border-gray-300">
+                  <thead>
+                    <tr>
+                      <th className="border border-gray-300 p-2">Ingredient</th>
+                      <th className="border border-gray-300 p-2">Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ingredients.map((ingredient, index) => (
+                      <tr key={index} className="border-b">
+                        <td className="border-r border-gray-300 p-2">
+                          {ingredient.name}
+                        </td>
+                        <td className="p-2">{ingredient.amount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
           <h2 className="text-xl font-semibold mb-2 ">Description:</h2>
-          <p className="text-gray-700 whitespace-pre-line break-words">{description}</p>
-          {/* <div className="flex mb-4">
-            {[...Array(5)].map((_, i) => (
-              <span
-                key={i}
-                className={i < rating ? "text-red-500" : "text-gray-400"}
-              >
-                ★
-              </span>
-            ))}
-          </div> */}
+          <p className="text-gray-700 whitespace-pre-line break-words">
+            {description}
+          </p>
           <button
             onClick={handleBackButton}
-            className="w-full py-2 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded hover:bg-gradient-to-l"
+            className="w-full py-2 mt-4 bg-gradient-to-r from-pink-500 to-blue-400 text-white rounded hover:bg-gradient-to-l"
           >
             Return to Home Page
           </button>
