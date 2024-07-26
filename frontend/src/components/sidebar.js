@@ -174,17 +174,6 @@ const Sidebar = () => {
             {isSidebarOpen && <span>My Favourites</span>}
           </a>
           <a
-            href="/courses"
-            className="flex items-center py-2 px-4 rounded transition duration-200 hover:bg-pink-100 text-gray-600"
-          >
-            <FaUsers
-              className={`text-lg ${
-                isSidebarOpen ? "mr-3" : "mx-auto"
-              }`}
-            />
-            {isSidebarOpen && <span>Courses</span>}
-          </a>
-          <a
             href="/community"
             className="flex items-center py-2 px-4 rounded transition duration-200 hover:bg-pink-100 text-gray-600"
           >
